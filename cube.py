@@ -15,8 +15,7 @@ class cube:
         self.bface = bface #4
         self.dface = dface #5
         self.cu = [uface,lface,fface,rface,bface,dface]
-        self.lastinstance = [uface,lface,fface,rface,bface,dface]
-
+        
     def turnR(self):
         rotate(self.cu[3])
         hi = self.cu[2][2],self.cu[2][5],self.cu[2][8],self.cu[5][2],self.cu[5][5],self.cu[5][8]\
@@ -27,12 +26,12 @@ class cube:
         rotate(self.cu[1])
         hi = self.cu[2][0],self.cu[2][3],self.cu[2][6],self.cu[5][0],self.cu[5][3],self.cu[5][6]\
            ,self.cu[0][0],self.cu[0][3],self.cu[0][6],self.cu[4][2],self.cu[4][5],self.cu[4][8] 
-        self.cu[5][0],self.cu[5][3],self.cu[5][6],self.cu[4][2],self.cu[4][5],self.cu[4][2],\
+        self.cu[5][0],self.cu[5][3],self.cu[5][6],self.cu[4][2],self.cu[4][5],self.cu[4][8],\
             self.cu[2][6],self.cu[2][3],self.cu[2][0],self.cu[0][6],self.cu[0][3],self.cu[0][0] = hi
     def turnU(self):
         rotate(self.cu[0])
         hi = self.cu[2][0],self.cu[2][1],self.cu[2][2],self.cu[1][0],self.cu[1][1],self.cu[1][2]\
-           ,self.cu[3][0],self.cu[3][1],self.cu[3][2],self.cu[4][0],self.cu[4][2],self.cu[4][3]
+           ,self.cu[3][0],self.cu[3][1],self.cu[3][2],self.cu[4][0],self.cu[4][1],self.cu[4][2]
         self.cu[1][0],self.cu[1][1],self.cu[1][2],self.cu[4][0],self.cu[4][1],self.cu[4][2],\
         self.cu[2][0],self.cu[2][1],self.cu[2][2],self.cu[3][0],self.cu[3][1],self.cu[3][2] = hi
     def turnD(self):
@@ -64,16 +63,7 @@ class cube:
             random.choice(turns)()
             self.displaycube()
             print('\n')
-    
-    def checkcube(self):
-        isChanged = False
-        if self.lastinstance != self.cu:
-            isChanged = True
-            self.lastinstance = self.cu
-            print('yes')
-
-        return isChanged
-            
+        
 
 
 
