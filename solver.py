@@ -1,3 +1,4 @@
+
 from cube import Rubikcube
 from varstore import solved
 
@@ -24,5 +25,4 @@ def whitecross(Rubikcube):
         
 
     
-
 
