@@ -6,6 +6,7 @@ def rotate(arr):
     arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6], arr[7], arr[8] = arr[6], arr[3], arr[0], arr[7], arr[4], arr[1], arr[8], arr[5], arr[2]
     return arr
 
+#Stores data as an array with multiple subarrays. Each subarrays represent a face on the cube.
 class cube:
     def __init__(self, uface, lface, fface, rface, bface, dface):
         self.uface = uface #0
@@ -15,7 +16,7 @@ class cube:
         self.bface = bface #4
         self.dface = dface #5
         self.cu = [uface,lface,fface,rface,bface,dface]
-        
+    
     def turnR(self):
         rotate(self.cu[3])
         hi = self.cu[2][2],self.cu[2][5],self.cu[2][8],self.cu[5][2],self.cu[5][5],self.cu[5][8]\
@@ -53,16 +54,26 @@ class cube:
         self.cu[3][8],self.cu[3][5],self.cu[3][2],self.cu[1][6],self.cu[1][3],self.cu[1][0],\
             self.cu[5][6],self.cu[5][7],self.cu[5][8],self.cu[0][0],self.cu[0][1],self.cu[0][2] = hi
     
+    #prints cube in the console
     def displaycube(self):
         for i in range(6): print(self.cu[i])
 
+    #do random moves on the cube randomly totalling from 50-100
     def shufflecube(self):
         times = random.randint(50,100)
         turns = [self.turnB,self.turnD,self.turnF,self.turnL,self.turnR,self.turnU]
         for i in range(times):
             random.choice(turns)()
-            self.displaycube()
-            print('\n')
+    
+    #import other oreintation of cubes
+    def rubikchange(self, importcube):
+        self.cu = importcube
+        
+    
+    def cubereset(self):
+        self.cu = [['u1','u2','u3','u4','u5','u6','u7','u8','u9'],['l1','l2','l3','l4','l5','l6','l7','l8','l9'],\
+        ['f1','f2','f3','f4','f5','f6','f7','f8','f9'],['r1','r2','r3','r4','r5','r6','r7','r8','r9'],\
+        ['b1','b2','b3','b4','b5','b6','b7','b8','b9'],['d1','d2','d3','d4','d5','d6','d7','d8','d9']]
         
 
 

@@ -1,13 +1,23 @@
 import sys
 import pygame
 from pygame.locals import *
-from interface import *
+from varstore import * 
 import collections
 
 pygame.font.init()
 my_font = pygame.font.SysFont('Arial', 30)
-gridcoordinates = [[350,400,450,350,400,450,350,400,450],[50,50,50,100,100,100,150,150,150]]
 
+#store the dynamic attribute value
+def getlastinstance(Rubikcube):
+    lastinstance = []
+    for x in Rubikcube.cu:
+        lastface = []
+        for y in x:
+            lastface.append(y)
+        lastinstance.append(lastface)
+    return lastinstance
+    
+#places color in the window according to their position in the array (face) and subarray (1-9)
 def placecube(Rubikcube, pos):
     posx = pos[0]
     posy = pos[1]
@@ -40,9 +50,7 @@ def placecube(Rubikcube, pos):
                 case 'b':
                     color = orange
                 case 'd':
-                    color = yellow
-                
-            
+                    color = yellow         
     
     
             x = posx[d] + transformx
@@ -53,6 +61,8 @@ def placecube(Rubikcube, pos):
             window.blit(text_surface, (x+10,y))
             pygame.display.update()
 
+
+lastinstance = getlastinstance(Rubikcube)
 
 if __name__ == '__main__':
     window = pygame.display.set_mode((1000,800))
@@ -67,7 +77,6 @@ if __name__ == '__main__':
             if event.type == pygame.KEYDOWN:
                 if event.key == K_r:
                     Rubikcube.turnR()
-                    print(Rubikcube.cu)
                 if event.key == K_u:
                     Rubikcube.turnU()
                 if event.key == K_d:
@@ -78,9 +87,15 @@ if __name__ == '__main__':
                     Rubikcube.turnL()
                 if event.key == K_f:
                     Rubikcube.turnF()
-                
+                if event.key == K_0:
+                    Rubikcube.shufflecube()
+                if event.key == K_1:
+                    Rubikcube.cubereset()
+            
+            #check if the cube has been updated//True then updates interface
+            if lastinstance != Rubikcube.cu:
                 placecube(Rubikcube.cu, gridcoordinates)
-                #pygame.display.flip()
+                lastinstance = getlastinstance(Rubikcube)
 
 
     pygame.quit()
