@@ -1,4 +1,3 @@
-
 from cube import Rubikcube
 from varstore import solved
 
@@ -22,7 +21,11 @@ def whitecross(Rubikcube):
                 if color in whitecross and color != 'u5':
                     ucross.append(color)
                     ucrosspos.append(getcolorpos(Rubikcube, color, solved))
-        
-
-    
-
+        for x, y in zip(ucross, ucrosspos):
+            print(x,y)
+            if y == 'f2':
+                Rubikcube.turnF()
+                for i in range(0,3): Rubikcube.TurnU()
+                Rubikcube.turnR()
+                Rubikcube.turnU()
+            

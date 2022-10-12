@@ -23,12 +23,13 @@ class cube:
            ,self.cu[0][2],self.cu[0][5],self.cu[0][8],self.cu[4][0],self.cu[4][3],self.cu[4][6] 
         self.cu[0][2],self.cu[0][5],self.cu[0][8],self.cu[2][2],self.cu[2][5],self.cu[2][8],\
             self.cu[4][6],self.cu[4][3],self.cu[4][0],self.cu[5][8],self.cu[5][5],self.cu[5][2] = hi
+#Fix L turn
     def turnL(self):
         rotate(self.cu[1])
         hi = self.cu[2][0],self.cu[2][3],self.cu[2][6],self.cu[5][0],self.cu[5][3],self.cu[5][6]\
            ,self.cu[0][0],self.cu[0][3],self.cu[0][6],self.cu[4][2],self.cu[4][5],self.cu[4][8] 
-        self.cu[5][0],self.cu[5][3],self.cu[5][6],self.cu[4][2],self.cu[4][5],self.cu[4][8],\
-            self.cu[2][6],self.cu[2][3],self.cu[2][0],self.cu[0][6],self.cu[0][3],self.cu[0][0] = hi
+        self.cu[5][0],self.cu[5][3],self.cu[5][6],self.cu[4][8],self.cu[4][5],self.cu[4][2],\
+            self.cu[2][0],self.cu[2][3],self.cu[2][6],self.cu[0][6],self.cu[0][3],self.cu[0][0] = hi
     def turnU(self):
         rotate(self.cu[0])
         hi = self.cu[2][0],self.cu[2][1],self.cu[2][2],self.cu[1][0],self.cu[1][1],self.cu[1][2]\
@@ -78,9 +79,9 @@ class cube:
 
 
 
-uface = ['u1','u2','u3','u4','u5','u6','u7','u8','u9']
+uface = ['u1','f2','u3','u4','u5','u6','u7','u8','u9']
 lface = ['l1','l2','l3','l4','l5','l6','l7','l8','l9']
-fface = ['f1','f2','f3','f4','f5','f6','f7','f8','f9']
+fface = ['f1','u2','f3','f4','f5','f6','f7','f8','f9']
 rface = ['r1','r2','r3','r4','r5','r6','r7','r8','r9']
 bface = ['b1','b2','b3','b4','b5','b6','b7','b8','b9']
 dface = ['d1','d2','d3','d4','d5','d6','d7','d8','d9']

@@ -1,9 +1,9 @@
 import sys
 import pygame
-from varstore import *
 from pygame.locals import *
-from solver import getcolorpos, whitecross
-from cube import Rubikcube
+from varstore import *
+from solver import *
+import collections
 
 pygame.font.init()
 my_font = pygame.font.SysFont('Arial', 30)
@@ -39,18 +39,17 @@ def placecube(Rubikcube, pos):
             elif position <= 54:
                 transformx,transformy = 0,300
         
-            match jtems[0]:
-                case 'u':
+            if jtems[0] == 'u':
                     color = white
-                case 'l':
+            elif jtems[0] == 'l':
                     color = green
-                case 'f':
+            elif jtems[0] == 'f':
                     color = red
-                case 'r':
+            elif jtems[0] == 'r':
                     color = blue
-                case 'b':
+            elif jtems[0] == 'b':
                     color = orange
-                case 'd':
+            elif jtems[0] == 'd':
                     color = yellow         
     
     
@@ -92,15 +91,13 @@ if __name__ == '__main__':
                     Rubikcube.shufflecube()
                 if event.key == K_1:
                     Rubikcube.cubereset()
-        
             
-        #check if the cube has been updated//True then updates interface
-        if lastinstance != Rubikcube.cu:
-            placecube(Rubikcube.cu, gridcoordinates)
-            lastinstance = getlastinstance(Rubikcube)
-            whitecross(Rubikcube)
-            
-    pygame.quit()
+            #check if the cube has been updated//True then updates interface
+            if lastinstance != Rubikcube.cu:
+                placecube(Rubikcube.cu, gridcoordinates)
+                lastinstance = getlastinstance(Rubikcube)
 
+        whitecross(Rubikcube)
+    pygame.quit()
     
 
