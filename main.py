@@ -2,7 +2,7 @@ import sys
 import pygame
 from varstore import *
 from pygame.locals import *
-from solver import getcolorpos, whitecross
+#from solver import *
 from cube import Rubikcube
 
 pygame.font.init()
