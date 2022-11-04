@@ -17,6 +17,32 @@ class cube:
         self.dface = dface #5
         self.cu = [uface,lface,fface,rface,bface,dface]
     
+    edges = {
+            'UR',
+            'UF',
+            'UL',
+            'UB',
+            'DR',
+            'DF',
+            'DL',
+            'DB',
+            'FR',
+            'FL',
+            'BL',
+            'BR'
+    }
+
+    corners = [
+        'URF',
+        'UFL',
+        'ULB',
+        'UBR',
+        'DFR',
+        'DLF',
+        'DBL',
+        'DRB'
+    ]
+
     def turnR(self):
         rotate(self.cu[3])
         hi = self.cu[2][2],self.cu[2][5],self.cu[2][8],self.cu[5][2],self.cu[5][5],self.cu[5][8]\
