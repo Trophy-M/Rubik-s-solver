@@ -92,13 +92,13 @@ if __name__ == '__main__':
                     Rubikcube.shufflecube()
                 if event.key == K_1:
                     Rubikcube.cubereset()
+                print(Rubikcube.cu)
         
             
         #check if the cube has been updated//True then updates interface
         if lastinstance != Rubikcube.cu:
             placecube(Rubikcube.cu, gridcoordinates)
             lastinstance = getlastinstance(Rubikcube)
-            whitecross(Rubikcube)
             
     pygame.quit()
 
