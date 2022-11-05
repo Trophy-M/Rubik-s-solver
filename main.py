@@ -1,12 +1,15 @@
 import sys
 import pygame
+from transformations import *
 from varstore import *
 from pygame.locals import *
+from cube import cube
 #from solver import *
-from cube import Rubikcube
 
 pygame.font.init()
 my_font = pygame.font.SysFont('Arial', 30)
+Rubikcube = cube(uface, lface, fface, rface, bface, dface)
+
 
 #store the dynamic attribute value
 def getlastinstance(Rubikcube):
@@ -71,23 +74,25 @@ if __name__ == '__main__':
     run = True
     pygame.display.flip()
     placecube(Rubikcube.cu, gridcoordinates)
+    
+    maketurns(Rubikcube, ['UP', 'R2', 'L2', 'F2', 'B2', 'UP', 'R', 'L', 'F', 'BP', 'U', 'F2', 'D2', 'R2', 'L2', 'F2', 'U2', 'F2', 'UP', 'F2'])
     while run == True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
             if event.type == pygame.KEYDOWN:
                 if event.key == K_r:
-                    Rubikcube.turnR()
+                    turnR(Rubikcube)
                 if event.key == K_u:
-                    Rubikcube.turnU()
+                    turnU(Rubikcube)
                 if event.key == K_d:
-                    Rubikcube.turnD()
+                    turnD(Rubikcube)
                 if event.key == K_b:
-                    Rubikcube.turnB()
+                    turnB(Rubikcube)
                 if event.key == K_l:
-                    Rubikcube.turnL()
+                    turnL(Rubikcube)
                 if event.key == K_f:
-                    Rubikcube.turnF()
+                    turnF(Rubikcube)
                 if event.key == K_0:
                     Rubikcube.shufflecube()
                 if event.key == K_1:

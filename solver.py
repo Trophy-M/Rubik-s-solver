@@ -4,45 +4,6 @@ from movelibrary import *
 import itertools
 
 tempcube = cube(uface, lface, fface, rface, bface, dface)
-def maketurns(theturn):
-    for turn in theturn:
-        match turn:
-            case 'R':
-                tempcube.turnR()
-            case 'L':
-                tempcube.turnL()
-            case 'U':
-                tempcube.turnU()
-            case 'D':
-                tempcube.turnD()
-            case 'F':
-                tempcube.turnF()
-            case 'B':
-                tempcube.turnB()
-            case 'RP':
-                for x in range(0,3): tempcube.turnR()
-            case 'LP':
-                for x in range(0,3):tempcube.turnL()
-            case 'UP':
-                for x in range(0,3):tempcube.turnU()
-            case 'DP':
-                for x in range(0,3):tempcube.turnD()
-            case 'FP':
-                for x in range(0,3):tempcube.turnF()
-            case 'BP':
-                for x in range(0,3):tempcube.turnB()
-            case 'R2':
-                for x in range(0,2): tempcube.turnR()
-            case 'L2':
-                for x in range(0,2):tempcube.turnL()
-            case 'U2':
-                for x in range(0,2):tempcube.turnU()
-            case 'D2':
-                for x in range(0,2):tempcube.turnD()
-            case 'F2':
-                for x in range(0,2):tempcube.turnF()
-            case 'B2':
-                for x in range(0,2):tempcube.turnB()
 
 def getcoord(tempcube, solved, face):
     for c,x in enumerate(tempcube.cu):
