@@ -1,0 +1,38 @@
+from solver import *
+from cube import *
+import time
+import pandas
+import numpy as np
+def checkRepeats(moves):
+    prev = 'k'
+    isRepeated = False
+    for items in moves:
+        if prev[0] == items[0]:
+            isRepeated = True
+            break
+        prev = items
+    
+    return isRepeated
+
+qmoves = []
+for items in standardmoves: qmoves.append([items])
+depth, i = 3, 0
+starttime = time.time()
+reducedmoves = pandas.DataFrame()
+while len(qmoves) > 0:
+    vstart = qmoves.pop(0)
+    for items in standardmoves:
+        if checkRepeats(vstart + [items]) == False:
+            qmoves.append(vstart + [items])
+    movedata = {'moves': [vstart]}
+    df = pandas.DataFrame(movedata)
+    df = df.set_index('moves')
+    reducedmoves = reducedmoves.append(df)
+    if len(qmoves[-1]) > depth:
+        endtime = time.time()
+        print(endtime-starttime)
+        break
+
+reducedmoves.to_csv('C:/Users/asawi/Documents/Rubiks Solver/Rubik-s-solver/reducedmoves.csv')
+
+

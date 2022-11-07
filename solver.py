@@ -2,6 +2,7 @@ from queue import Queue
 from cube import *
 from movelibrary import *
 import itertools
+from varstore import *
 
 tempcube = cube(uface, lface, fface, rface, bface, dface)
 
