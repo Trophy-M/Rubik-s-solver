@@ -17,6 +17,31 @@ class cube:
         self.bface = bface  # 4
         self.dface = dface  # 5
         self.cu = [uface, lface, fface, rface, bface, dface]
+        self.edges = {
+            'ub':[self.uface[1],self.bface[1]],
+            'ul':[self.uface[3],self.lface[1]],
+            'uf':[self.uface[7],self.fface[1]],
+            'ur':[self.uface[5],self.rface[1]],
+            'fl':[self.fface[3],self.lface[5]],
+            'fr':[self.fface[5],self.rface[3]],
+            'bl':[self.bface[3],self.lface[5]], #check bface connections
+            'br':[self.bface[5],self.rface[3]],
+            'db':[],
+            'dl':[],
+            'df':[],
+            'dr':[],
+        }
+        self.corners = {
+            'ub':[],
+            'ul':[],
+            'uf':[],
+            'ur':[],
+            'fl':[],
+            'fr':[],
+            'bl':[], #check bface connections
+            'br':[],
+        }
+
 
     # prints cube in the console
     def displaycube(self):
