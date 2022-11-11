@@ -1,54 +1,16 @@
-from queue import Queue
 from cube import *
-from movelibrary import *
-import itertools
+from transformations import *
 from varstore import *
 
-tempcube = cube(uface, lface, fface, rface, bface, dface)
-
-def getcoord(tempcube, solved, face):
-    for c,x in enumerate(tempcube.cu):
-        for d,y in enumerate(x):
-            e = d+1
-            if y == face:
-                coord = [c,d]
-    colorcoord = solved[coord[0]][coord[1]]
-    return colorcoord
-
-def checkpattern(tempcube):
-    tempcube
-
-def findsolution(tempcube):
-    print(standardmove)
-    #whitecross\
-    lastinstance = tempcube.cu
-
-def genmoves(moves, depth):
-    return list(itertools.permutations(moves,r=depth))
-
-def bfssearch(standardmoves):
-    queue = []
-    possiblemoves = []
-    for i in range(0,len(standardmoves)):
-        possiblemoves += genmoves(standardmoves, i)
+class solver(cube):
+    def __init__(self,uface, lface, fface, rface, bface, dface):
+        super().__init__(uface, lface, fface, rface, bface, dface)
     
-    
+    def whitecross(self):
+        print([self.edges['ub'],self.edges['ul'],self.edges['uf'],self.edges['ur']],[['u2', 'b2'],['u4', 'l2'], ['u8', 'f2'], ['u6', 'r2']])
+        while self.edges['ub'] != ['u2', 'b2'] or self.edges['ul'] != ['u4', 'l2'] or self.edges['uf'] != ['u8', 'f2'] or self.edges['ur']\
+        != ['u6', 'r2']:
+            print('yes')
 
-    
-'''    def bfssearch(vertex,moves,goal,depth):
-        isVisitted = [False]*(len(moves)**depth)
-        queue = []
-        queue.append(vertex)
-        counter = 0
-        solution = None
-        while len(queue) > 0 and counter < len(moves)**depth:
-            counter += 1
-            vertexnow = queue.pop(0)
-            if isVisitted[queue.index(vertexnow)] == False:
-                if vertexnow == goal:
-                    solution = moves
-                isVisitted[queue.index(vertexnow)] == True
-                if moves[]'''
-
-
-        
+solvetempcube = solver(uface, lface, fface, rface, bface, dface)
+solvetempcube.whitecross()

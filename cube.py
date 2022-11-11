@@ -24,25 +24,50 @@ class cube:
             'ur':[self.uface[5],self.rface[1]],
             'fl':[self.fface[3],self.lface[5]],
             'fr':[self.fface[5],self.rface[3]],
-            'bl':[self.bface[3],self.lface[5]], #check bface connections
-            'br':[self.bface[5],self.rface[3]],
-            'db':[],
-            'dl':[],
-            'df':[],
-            'dr':[],
+            'bl':[self.bface[5],self.lface[3]], #check bface connections
+            'br':[self.bface[3],self.rface[5]],
+            'db':[self.dface[1],self.bface[7]],
+            'dl':[self.dface[5],self.lface[7]],
+            'df':[self.dface[7],self.fface[7]],
+            'dr':[self.dface[3],self.rface[7]],
         }
         self.corners = {
-            'ub':[],
-            'ul':[],
-            'uf':[],
-            'ur':[],
-            'fl':[],
-            'fr':[],
-            'bl':[], #check bface connections
-            'br':[],
+            'ubl':[self.uface[0],self.bface[2],self.lface[0]],
+            'ubr':[self.uface[2],self.bface[0],self.rface[2]],
+            'ufl':[self.uface[6],self.fface[0],self.lface[2]],
+            'ufr':[self.uface[8],self.fface[2],self.rface[0]],
+            'dbl':[self.dface[2],self.bface[8],self.lface[6]],
+            'dbr':[self.dface[0],self.bface[6],self.rface[8]],
+            'dfl':[self.dface[8],self.fface[6],self.lface[8]],
+            'dfr':[self.dface[6],self.fface[8],self.rface[6]],
         }
+        
 
-
+    def updatedata(self):
+        self.edges = {
+        'ub':[self.uface[1],self.bface[1]],
+        'ul':[self.uface[3],self.lface[1]],
+        'uf':[self.uface[7],self.fface[1]],
+        'ur':[self.uface[5],self.rface[1]],
+        'fl':[self.fface[3],self.lface[5]],
+        'fr':[self.fface[5],self.rface[3]],
+        'bl':[self.bface[5],self.lface[3]], #check bface connections
+        'br':[self.bface[3],self.rface[5]],
+        'db':[self.dface[1],self.bface[7]],
+        'dl':[self.dface[5],self.lface[7]],
+        'df':[self.dface[7],self.fface[7]],
+        'dr':[self.dface[3],self.rface[7]],
+        }
+        self.corners = {
+            'ubl':[self.uface[0],self.bface[2],self.lface[0]],
+            'ubr':[self.uface[2],self.bface[0],self.rface[2]],
+            'ufl':[self.uface[6],self.fface[0],self.lface[2]],
+            'ufr':[self.uface[8],self.fface[2],self.rface[0]],
+            'dbl':[self.dface[2],self.bface[8],self.lface[6]],
+            'dbr':[self.dface[0],self.bface[6],self.rface[8]],
+            'dfl':[self.dface[8],self.fface[6],self.lface[8]],
+            'dfr':[self.dface[6],self.fface[8],self.rface[6]],
+        }
     # prints cube in the console
     def displaycube(self):
         for i in range(6): print(self.cu[i])

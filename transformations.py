@@ -15,6 +15,7 @@ def turnR(Rubikcube):
     Rubikcube.cu[5][8], Rubikcube.cu[5][5], Rubikcube.cu[5][2] = tempd
     Rubikcube.cu[0][2], Rubikcube.cu[0][5], Rubikcube.cu[0][8] = tempu
     Rubikcube.cu[4][6], Rubikcube.cu[4][3], Rubikcube.cu[4][0] = tempb
+    Rubikcube.updatedata()
 
 def turnL(Rubikcube):
     rotate(Rubikcube.cu[1])
@@ -28,6 +29,7 @@ def turnL(Rubikcube):
     Rubikcube.cu[5][0], Rubikcube.cu[5][3], Rubikcube.cu[5][6] = tempd
     Rubikcube.cu[0][6], Rubikcube.cu[0][3], Rubikcube.cu[0][0] = tempu
     Rubikcube.cu[4][8], Rubikcube.cu[4][5], Rubikcube.cu[4][2] = tempb
+    Rubikcube.updatedata()
 
 def turnU(Rubikcube):
     rotate(Rubikcube.cu[0])
@@ -41,7 +43,7 @@ def turnU(Rubikcube):
     Rubikcube.cu[1][0], Rubikcube.cu[1][1], Rubikcube.cu[1][2] = templ
     Rubikcube.cu[3][0], Rubikcube.cu[3][1], Rubikcube.cu[3][2] = tempr
     Rubikcube.cu[4][0], Rubikcube.cu[4][1], Rubikcube.cu[4][2] = tempb
-    
+    Rubikcube.updatedata()
     
 
 def turnD(Rubikcube):
@@ -56,6 +58,7 @@ def turnD(Rubikcube):
     Rubikcube.cu[1][6], Rubikcube.cu[1][7], Rubikcube.cu[1][8] = templ
     Rubikcube.cu[3][6], Rubikcube.cu[3][7], Rubikcube.cu[3][8] = tempr
     Rubikcube.cu[4][6], Rubikcube.cu[4][7], Rubikcube.cu[4][8] = tempb
+    Rubikcube.updatedata()
     
 
 def turnF(Rubikcube):
@@ -70,7 +73,7 @@ def turnF(Rubikcube):
     Rubikcube.cu[0][8], Rubikcube.cu[0][7], Rubikcube.cu[0][6] = tempu
     Rubikcube.cu[1][2], Rubikcube.cu[1][5], Rubikcube.cu[1][8] = templ
     Rubikcube.cu[3][0], Rubikcube.cu[3][3], Rubikcube.cu[3][6] = tempr
-    
+    Rubikcube.updatedata()
     
 
 def turnB(Rubikcube):
@@ -85,9 +88,11 @@ def turnB(Rubikcube):
     Rubikcube.cu[0][0], Rubikcube.cu[0][1], Rubikcube.cu[0][2] = tempu
     Rubikcube.cu[1][6], Rubikcube.cu[1][3], Rubikcube.cu[1][0] = templ
     Rubikcube.cu[3][8], Rubikcube.cu[3][5], Rubikcube.cu[3][2] = tempr
+    Rubikcube.updatedata()
 
 def maketurns(tempcube, theturn):
     for turn in theturn:
+        turn  = turn.upper()
         match turn:
             case 'R':
                 turnR(tempcube)

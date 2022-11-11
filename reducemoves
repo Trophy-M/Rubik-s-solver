@@ -1,5 +1,6 @@
 from solver import *
 from cube import *
+from varstore import *
 import time
 import pandas
 import numpy as np
@@ -14,28 +15,31 @@ def checkRepeats(moves):
         prev = moves.pop(0)
     
     return isRepeated
+def generatedb(firststate, standardmoves):
+    qmoves = []
+    for items in standardmoves: qmoves.append([items])
+    depth, i = 6, -1
+    starttime = time.time()
+    reducedmoves = pandas.DataFrame()
+    movedata = {}
+    print('generating...')
+    while len(qmoves) > 0:
+        i += 1
+        vstart = qmoves.pop(0)
+        for items in standardmoves:
+            if checkRepeats(vstart + [items]) == False:
+                qmoves.append(vstart + [items])
+        tempcube.cubereset()
+        turnedcube = tempcube
+        maketurns(turnedcube, vstart)
+        movedata[i] = {'vertex': tempcube.cu, 'moves': vstart, 'neighbor': turnedcube.cu}
+        print('running', movedata[i]['moves'], 'at', 976338-i, tempcube.cu)
+        if len(qmoves[-1]) > depth:
+            endtime = time.time()
+            print(endtime-starttime)
+            break
+    return movedata
 
-qmoves = []
-for items in standardmoves: qmoves.append([items])
-depth, i = 6, -1
-starttime = time.time()
-reducedmoves = pandas.DataFrame()
-movedata = {}
-print('generating...')
-while len(qmoves) > 0:
-    i += 1
-    vstart = qmoves.pop(0)
-    for items in standardmoves:
-        if checkRepeats(vstart + [items]) == False:
-            qmoves.append(vstart + [items])
-    movedata[i] = {'moves': [vstart], 'length': len(vstart)}
-    print(movedata[i])
-    if len(qmoves[-1]) > depth:
-        endtime = time.time()
-        print(endtime-starttime)
-        break
-
+movedata = generatedb(solved, standardmoves)
 reducedmoves = pandas.DataFrame.from_dict(movedata, 'index')
 reducedmoves.to_csv('C:/Users/asawi/Documents/Rubiks Solver/Rubik-s-solver/reducedmoves.csv')
-
-
