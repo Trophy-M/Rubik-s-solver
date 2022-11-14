@@ -1,6 +1,8 @@
 from solver import *
 from cube import *
 from varstore import *
+from movelibrary import *
+from interface import *
 import time
 import pandas
 import numpy as np
@@ -27,12 +29,14 @@ def generatedb(firststate, standardmoves):
         i += 1
         vstart = qmoves.pop(0)
         for items in standardmoves:
-            if checkRepeats(vstart + [items]) == False:
-                qmoves.append(vstart + [items])
+            '''if checkRepeats(vstart + [items]) == False:
+                qmoves.append(vstart + [items])'''
+            qmoves.append(vstart + [items])
+        tempcube = cube(uface,lface,fface,rface,bface,dface)
         tempcube.cubereset()
-        turnedcube = tempcube
-        maketurns(turnedcube, vstart)
-        movedata[i] = {'vertex': tempcube.cu, 'moves': vstart, 'neighbor': turnedcube.cu}
+        movedata[i] = {'vertex': tempcube.cu, 'moves': vstart, 'neighbors': ''}
+        maketurns(tempcube, vstart)
+        movedata[i]['neighbors'] = tempcube.cu
         print('running', movedata[i]['moves'], 'at', 976338-i, tempcube.cu)
         if len(qmoves[-1]) > depth:
             endtime = time.time()
