@@ -90,6 +90,17 @@ def turnB(Rubikcube):
     Rubikcube.cu[3][8], Rubikcube.cu[3][5], Rubikcube.cu[3][2] = tempr
     Rubikcube.updatedata()
 
+def rotcube(Rubikcube, axis):
+    axis = axis.lower()
+    tempu,templ,tempf,tempr,tempb,tempd = Rubikcube.cu[0], Rubikcube.cu[1], Rubikcube.cu[2], Rubikcube.cu[3], Rubikcube.cu[4], Rubikcube.cu[5]
+    match axis:
+        case 'x':
+            Rubikcube.cu[0], Rubikcube.cu[1], Rubikcube.cu[2], Rubikcube.cu[3], Rubikcube.cu[4], Rubikcube.cu[5] = tempf,templ,tempd,tempr,tempu,tempb
+            for i in range(0,2): rotate(Rubikcube.cu[4])
+            for i in range(0,2): rotate(Rubikcube.cu[5])
+            for i in range(0,3): rotate(Rubikcube.cu[1])
+            rotate(Rubikcube.rface)
+
 def maketurns(tempcube, theturn):
     for turn in theturn:
         turn  = turn.upper()
@@ -132,4 +143,3 @@ def maketurns(tempcube, theturn):
                 for x in range(0,2):turnB(tempcube)
     
     
-  

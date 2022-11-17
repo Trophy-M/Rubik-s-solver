@@ -3,17 +3,23 @@ import pygame
 from transformations import *
 from cube import cube
 from interface import *
-from varstore import *
+from beginnersolver import *
+import time
 #from solver import *
+
+uface = ['u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'u7', 'u8', 'u9']
+lface = ['l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9']
+fface = ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9']
+rface = ['r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9']
+bface = ['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b9']
+dface = ['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9']
 
 pygame.font.init()
 my_font = pygame.font.SysFont('Arial', 30)
 Rubikcube = cube(uface, lface, fface, rface, bface, dface)
-for items in ['ub','ul','uf','ur']: print(Rubikcube.edges[items])
 
 
 lastinstance = getlastinstance(Rubikcube)
-
 if __name__ == '__main__':
     window = pygame.display.set_mode((1000,800))
     window.fill(white)
@@ -23,6 +29,7 @@ if __name__ == '__main__':
     
     #maketurns(Rubikcube, ['UP', 'R2', 'L2', 'F2', 'B2', 'UP', 'R', 'L', 'F', 'BP', 'U', 'F2', 'D2', 'R2', 'L2', 'F2', 'U2', 'F2', 'UP', 'F2'])
     while run == True:
+        time.sleep(0.1)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -43,8 +50,9 @@ if __name__ == '__main__':
                     Rubikcube.shufflecube()
                 if event.key == K_1:
                     Rubikcube.cubereset()
-                print(Rubikcube.cu)
-
+                if event.key == K_x:
+                    rotcube(Rubikcube,'x')
+                
         
             
         #check if the cube has been updated//True then updates interface
