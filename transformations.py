@@ -105,7 +105,13 @@ def rotcube(Rubikcube, axis):
             for i in range(0,3): rotate(Rubikcube.cu[5])
             rotate(Rubikcube.cu[0])
         case 'z':
-            Rubikcube.cu[0], Rubikcube.cu[1], Rubikcube.cu[2], Rubikcube.cu[3], Rubikcube.cu[4], Rubikcube.cu[5]
+            Rubikcube.cu[0], Rubikcube.cu[1], Rubikcube.cu[2], Rubikcube.cu[3], Rubikcube.cu[4], Rubikcube.cu[5] = templ, tempd, tempf, tempu, tempb, tempr
+            rotate(Rubikcube.cu[0])
+            rotate(Rubikcube.cu[1])
+            rotate(Rubikcube.cu[2])
+            rotate(Rubikcube.cu[3])
+            rotate(Rubikcube.cu[5])
+            for i in range(0,3):rotate(Rubikcube.cu[4])
                
 
 def maketurns(tempcube, theturn):
