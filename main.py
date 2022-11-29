@@ -5,6 +5,7 @@ from cube import cube
 from interface import *
 from beginnersolver import *
 import time
+from varstore import *
 #from solver import *
 
 uface = ['u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'u7', 'u8', 'u9']
@@ -29,7 +30,6 @@ if __name__ == '__main__':
     
     #maketurns(Rubikcube, ['UP', 'R2', 'L2', 'F2', 'B2', 'UP', 'R', 'L', 'F', 'BP', 'U', 'F2', 'D2', 'R2', 'L2', 'F2', 'U2', 'F2', 'UP', 'F2'])
     while run == True:
-        time.sleep(0.1)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -52,7 +52,10 @@ if __name__ == '__main__':
                     Rubikcube.cubereset()
                 if event.key == K_x:
                     rotcube(Rubikcube,'x')
-                
+                if event.key == K_y:
+                    rotcube(Rubikcube,'y')
+                if event.key == K_z:
+                    rotcube(Rubikcube,'z')
         
             
         #check if the cube has been updated//True then updates interface

@@ -1,3 +1,6 @@
+import time
+from varstore import *
+
 def rotate(arr):
     arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6], arr[7], arr[8] = arr[6], arr[3], arr[0], arr[7], arr[4], \
                                                                              arr[1], arr[8], arr[5], arr[2]
@@ -101,7 +104,7 @@ def rotcube(Rubikcube, axis):
             for i in range(0,3): rotate(Rubikcube.cu[1])
             rotate(Rubikcube.rface)
         case 'y':
-            Rubikcube.cu[0], Rubikcube.cu[1], Rubikcube.cu[2], Rubikcube.cu[3], Rubikcube.cu[4], Rubikcube.cu[5] = tempu, tempf, templ, tempb, tempr, tempd
+            Rubikcube.cu[0], Rubikcube.cu[1], Rubikcube.cu[2], Rubikcube.cu[3], Rubikcube.cu[4], Rubikcube.cu[5] = tempu, tempf, tempr, tempb, templ, tempd
             for i in range(0,3): rotate(Rubikcube.cu[5])
             rotate(Rubikcube.cu[0])
         case 'z':
@@ -154,5 +157,22 @@ def maketurns(tempcube, theturn):
                 for x in range(0,2):turnF(tempcube)
             case 'B2':
                 for x in range(0,2):turnB(tempcube)
-    
-    
+
+#count the number of specific facelets color in face
+def checkcolorinface(face, color):
+    count = 0
+    for items in face:
+        if items[0] == color:
+            count += 1
+    return count
+
+#check if any specified facelets in the face
+def checkanyfacelets(face, facelets):
+    containAny = False
+    if any(x in face for x in facelets):
+        containAny = True
+    return containAny
+#find edges with the face inputted
+'''def findedgeswithface(Rubikcube, face):
+    for key in self.edges:
+        if any()'''
