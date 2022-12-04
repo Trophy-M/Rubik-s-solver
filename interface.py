@@ -1,6 +1,7 @@
 import pygame
 from varstore import *
 from pygame.locals import *
+import time
 
 def getlastinstance(Rubikcube):
     lastinstance = []
@@ -51,6 +52,13 @@ def placecube(Rubikcube, pos,window,my_font):
             y = posy[d] + transformy
             pygame.draw.rect(window, color,(x,y ,width, height))
             pygame.draw.rect(window, black,(x,y ,width, height),2)
-            text_surface = my_font.render(str(int(jtems[1])-1), False, (0, 0, 0))
+            text_surface = my_font.render(str(int(jtems[1])), False, (0, 0, 0))
             window.blit(text_surface, (x+10,y))
             pygame.display.update()
+def displaycube(Rubikcube, delay):
+    gridcoordinates = [[350,400,450,350,400,450,350,400,450],[50,50,50,100,100,100,150,150,150]]
+    my_font = pygame.font.SysFont('Arial', 30)
+    window = pygame.display.set_mode((1000,800))
+    window.fill(white)
+    time.sleep(delay)
+    placecube(Rubikcube.cu,gridcoordinates, window, my_font)

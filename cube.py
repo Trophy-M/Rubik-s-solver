@@ -74,6 +74,12 @@ class cube:
             'dfl':[self.dface[8],self.fface[6],self.lface[8]],
             'dfr':[self.dface[6],self.fface[8],self.rface[6]],
         }
+        self.uface = self.cu[0]  # 0
+        self.lface = self.cu[1]  # 1
+        self.fface = self.cu[2]  # 2
+        self.rface = self.cu[3]  # 3
+        self.bface = self.cu[4]  # 4
+        self.dface = self.cu[5]  # 5
 
     # prints cube in the console
     def displaycube(self):
@@ -116,6 +122,20 @@ class cube:
                 break
         return solvededge
 
+    #search for edge (solved) and find where it is (scrambled)
+    #current problem: the faces in the edge isn't fixed
+    def searchedge(self, thisedge):
+        self.updatedata
+        thisedgeat = 'k'
+        thisedgefaces = solvededges[thisedge]
+        for edges in self.edges:
+            print(thisedgefaces, self.edges[edges])
+            if (thisedgefaces[0][0] == self.edges[edges][0][0] and thisedgefaces[1][0] == self.edges[edges][1][0]) or (thisedgefaces[1][0] == self.edges[edges][0][0] and thisedgefaces[0][0] == self.edges[edges][1][0]):
+                thisedgeat = edges
+                break
+        print('result',thisedgeat)
+        return thisedgeat
+                
 
 
 
