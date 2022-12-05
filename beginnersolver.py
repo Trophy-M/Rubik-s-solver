@@ -59,8 +59,10 @@ class solver(cube):
         if unsolvededges[0] == self.fface[4][0]:
           pass
         elif unsolvededges[0] == self.lface[4][0]:
+          print('swap left')
           maketurns(self,edgeswapalg)
         elif unsolvededges[0] == self.bface[4][0]:
+          print('swap left')
           maketurns(self,['U'])
           maketurns(self,edgeswapalg)
           for i in range(0,2): rotcube(self, 'y')
