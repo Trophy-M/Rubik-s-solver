@@ -13,7 +13,6 @@ window.fill(white)
 def checkifcross(Rubikcube):
   isCross = True
   for i in range(1,5):
-    print(Rubikcube.cu[i][1], Rubikcube.cu[i][4])
     if Rubikcube.cu[i][1][0] != Rubikcube.cu[i][4][0]:
       isCross = False
       break
@@ -54,24 +53,15 @@ class solver(cube):
     while not (checkifcross(self)):
       displaycube(self,0.5)
       unsolvededgesmap = [self.fface[1],self.rface[1],self.bface[1],self.lface[1]]
-      print(unsolvededgesmap)
-      for unsolvededges in unsolvededgesmap:
-        if unsolvededges[0] == self.fface[4][0]:
-          pass
-        elif unsolvededges[0] == self.lface[4][0]:
-          print('swap left')
-          maketurns(self,edgeswapalg)
-        elif unsolvededges[0] == self.bface[4][0]:
-          print('swap left')
-          maketurns(self,['U'])
-          maketurns(self,edgeswapalg)
-          for i in range(0,2): rotcube(self, 'y')
-          maketurns(self,edgeswapalg)
-          for i in range(0,2): rotcube(self, 'y')
-        elif unsolvededges[0] == self.rface[4][0]:
-          rotcube(self, 'y')
-          maketurns(self,edgeswapalg)
-          for i in range(0,3): rotcube(self, 'y')
+      while self.fface[1][0] != self.fface[4][0]:
+        displaycube(self,0.5)
+        maketurns(self, edgeswapalg)
+        if self.fface[1][0] == self.fface[4][0]:
+          break
+        rotcube(self,'y')
+      rotcube(self,'y')
+      
+      
 
 
 
