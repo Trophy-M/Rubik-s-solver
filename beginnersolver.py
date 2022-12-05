@@ -60,13 +60,6 @@ class solver(cube):
           break
         rotcube(self,'y')
       rotcube(self,'y')
-      
-      
-
-
-
-
-
 
   def crossarrange(self):
     while not (self.cu[0][1][0] == self.cu[0][3][0] == self.cu[0][5][0] == self.cu[0][7][0]):
@@ -106,8 +99,7 @@ class solver(cube):
               maketurns(self, ['UP'])
               rotcube(self, 'y')
             self.solvefrontedge(i,whitefacemap)
-
-              
+           
       whitefacemap = facemapping(self, ['u2', 'u4', 'u6', 'u8'])
 
 solver.maketurns = maketurns
