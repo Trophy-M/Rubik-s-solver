@@ -28,6 +28,7 @@ if __name__ == '__main__':
     pygame.display.flip()
     placecube(Rubikcube.cu, gridcoordinates,window,my_font)
     
+    
     #maketurns(Rubikcube, ['UP', 'R2', 'L2', 'F2', 'B2', 'UP', 'R', 'L', 'F', 'BP', 'U', 'F2', 'D2', 'R2', 'L2', 'F2', 'U2', 'F2', 'UP', 'F2'])
     while run == True:
         for event in pygame.event.get():

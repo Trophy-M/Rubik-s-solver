@@ -105,10 +105,10 @@ class cube:
                    ['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9']]
     
     #input in face and get its position of where it would be if cube solved
-    def getfacepos(self, facelet):
+    def getfaceletpos(self, facelet):
+        self.updatedata()
         for c,items in enumerate(self.cu):
             if facelet in items:
-                print(facelet, items)
                 pos = items.index(facelet)
                 facenum = c
         return self.solved[facenum][pos]
@@ -129,11 +129,9 @@ class cube:
         thisedgeat = 'k'
         thisedgefaces = solvededges[thisedge]
         for edges in self.edges:
-            print(thisedgefaces, self.edges[edges])
             if (thisedgefaces[0][0] == self.edges[edges][0][0] and thisedgefaces[1][0] == self.edges[edges][1][0]) or (thisedgefaces[1][0] == self.edges[edges][0][0] and thisedgefaces[0][0] == self.edges[edges][1][0]):
                 thisedgeat = edges
                 break
-        print('result',thisedgeat)
         return thisedgeat
                 
 

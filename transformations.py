@@ -118,6 +118,7 @@ def rotcube(Rubikcube, axis):
                
 
 def maketurns(tempcube, theturn):
+    tempcube.updatedata()
     for turn in theturn:
         turn  = turn.upper()
         match turn:

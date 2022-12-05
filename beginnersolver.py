@@ -2,80 +2,131 @@ import pygame
 from cube import *
 from transformations import *
 from varstore import *
-from interface import displaycube
+from interface import *
 import time
 pygame.font.init()
 my_font = pygame.font.SysFont('Arial', 30)
 window = pygame.display.set_mode((1000,800))
 window.fill(white)
 
+#check if top layer forms a cross
+def checkifcross(Rubikcube):
+  isCross = True
+  for i in range(1,5):
+    print(Rubikcube.cu[i][1], Rubikcube.cu[i][4])
+    if Rubikcube.cu[i][1][0] != Rubikcube.cu[i][4][0]:
+      isCross = False
+      break
+    
+    if not (Rubikcube.cu[0][1][0] == Rubikcube.cu[0][3][0] == Rubikcube.cu[0][5][0] == Rubikcube.cu[0][7][0]):
+      isCross = False
+  return isCross
+
+#returns current positions of faces inputted as list as list
+def facemapping(Rubikcube, face):
+  facemap = []
+  for items in face:
+    facepos = Rubikcube.getfaceletpos(items)
+    facemap.append(facepos)
+  return facemap
+
+
+#arrange white faces on up face
 class solver(cube):
-    def __init__(self,uface, lface, fface, rface, bface, dface):
-        super().__init__(uface, lface, fface, rface, bface, dface)
-        
+  def __init__(self,uface, lface, fface, rface, bface, dface):
+    super().__init__(uface, lface, fface, rface, bface, dface)
+  
+  def solvefrontedge(self, i, whitefacemap):
+    if whitefacemap[i][1] == '2':
+      maketurns(self, ['F', 'UP', 'R', 'U'])
+    elif whitefacemap[i][1] == '4':
+      maketurns(self, ['U', 'LP', 'UP'])
+    elif whitefacemap[i][1] == '6':
+      maketurns(self, ['UP', 'R', 'U'])
+    elif whitefacemap[i][1] == '8':
+      maketurns(self, ['F2'])
+      maketurns(self, ['F', 'UP', 'R', 'U'])
     
-    
-    def whitecross(self):
-      whiteedgemap = {
-        'uf': self.searchedge('uf'),
-        'ul': self.searchedge('ul'),
-        'ub': self.searchedge('ub'),
-        'ur': self.searchedge('ur')
-        }
-      for key in whiteedgemap:
-        print('Working on', key, 'from',whiteedgemap[key] )
-        displaycube(self, turntime)
-        rottimes = 0
-        print(whiteedgemap[key])
-        while 'f' not in whiteedgemap[key] and rottimes < 3:
-          rottimes += 1
-          maketurns(self,['UP'])
-          rotcube(self,'y')
-          self.updatedata()
-          whiteedgemap[key] = self.searchedge(key)
-          #print(whiteedgemap)
-          displaycube(self, turntime)
-        if rottimes >= 3:
-          print('white on up face')
-          while whiteedgemap[key] != self.searchedge(key):
-            print('switching edge')
-            maketurns(self,['R','U','RP','U','R','U2','RP','U'])
-            self.updatedata()
-            whiteedgemap[key] = self.searchedge(key)
-            displaycube(self, turntime)
-        elif rottimes < 3:
-          print('white not on up face')
-          match self.searchedge(key):
-            case 'uf':
-              pass
-            case 'fl':
-              maketurns(self, ['U', 'LP', 'UP'])
-              displaycube(self, turntime)
-            case 'fr':
-              maketurns(self, ['UP', 'R', 'U'])
-              displaycube(self, turntime)
-            case 'df':
-              maketurns(self, ['F2'])
-              displaycube(self, turntime)
-          self.updatedata()
-          whiteedgemap[key] = self.searchedge(key)
-        if self.edges['uf'][1][0] == 'u':
-          maketurns(self,['F', 'UP', 'R', 'U'])
-        maketurns(self, ['U'])
-        
+  #assuming we already have an arrangement of the up faces. We can begin rearranging the edges such that it is in the correct place.
+  def crosssolve(self):
+    edgeswapalg = ['R', 'U', 'RP', 'U', 'R', 'U2', 'RP', 'U']
+    #in a acw direction == y axis direction
+    while not (checkifcross(self)):
+      displaycube(self,0.5)
+      unsolvededgesmap = [self.fface[1],self.rface[1],self.bface[1],self.lface[1]]
+      print(unsolvededgesmap)
+      for unsolvededges in unsolvededgesmap:
+        if unsolvededges[0] == self.fface[4][0]:
+          pass
+        elif unsolvededges[0] == self.lface[4][0]:
+          maketurns(self,edgeswapalg)
+        elif unsolvededges[0] == self.bface[4][0]:
+          maketurns(self,['U'])
+          maketurns(self,edgeswapalg)
+          for i in range(0,2): rotcube(self, 'y')
+          maketurns(self,edgeswapalg)
+          for i in range(0,2): rotcube(self, 'y')
+        elif unsolvededges[0] == self.rface[4][0]:
+          rotcube(self, 'y')
+          maketurns(self,edgeswapalg)
+          for i in range(0,3): rotcube(self, 'y')
 
 
 
 
+
+
+  def crossarrange(self):
+    while not (self.cu[0][1][0] == self.cu[0][3][0] == self.cu[0][5][0] == self.cu[0][7][0]):
+      if (self.cu[0][1][0] == self.cu[0][3][0] == self.cu[0][5][0] == self.cu[0][7][0]):
+        break
+      whitefacemap = facemapping(self, ['u2', 'u4', 'u6', 'u8'])
+      #faceindex - index of face are we currently looking at/ items - face we're looking at
+      for i in range(0,len(whitefacemap)):
+        c = 0
+        while self.edges['uf'][0][0] == 'u' and c < 4:
+          c += 1
+          maketurns(self, ['U'])
+        whitefacemap = facemapping(self, ['u2', 'u4', 'u6', 'u8'])
+        displaycube(self,0.5)
+        match whitefacemap[i][0]:
+          case 'u':
+            pass
+          case 'f':
+            self.solvefrontedge(i,whitefacemap)
+          case 'd':
+            #keep rotating until its is in d1 then f2
+            while whitefacemap[i] != 'd2':
+              maketurns(self, ['D'])
+              whitefacemap[i] = self.getfaceletpos(['u2', 'u4', 'u6', 'u8'][i])
+            maketurns(self, ['F2'])
+          case 'r':
+            maketurns(self, ['UP'])
+            rotcube(self, 'y')
+            self.solvefrontedge(i,whitefacemap)
+          case 'b':
+            for i in range(0,2):
+              maketurns(self, ['UP'])
+              rotcube(self, 'y')
+            self.solvefrontedge(i,whitefacemap)
+          case 'l':
+            for i in range(0,3):
+              maketurns(self, ['UP'])
+              rotcube(self, 'y')
+            self.solvefrontedge(i,whitefacemap)
+
+              
+      whitefacemap = facemapping(self, ['u2', 'u4', 'u6', 'u8'])
 
 solver.maketurns = maketurns
-solvetempcube = solver(['u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'u7', 'u8', 'u9']
+solvecube = solver(['u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'u7', 'u8', 'u9']
 ,['l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9']
 ,['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9']
 ,['r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9']
 ,['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b9']
 ,['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9'])
-solvetempcube.maketurns(['R', 'U', 'L','R2','LP', 'UP','U','RP','U','R','F', 'UP', 'R'])
-solvetempcube.whitecross()
+solvecube.shufflecube()
+solvecube.crossarrange()
+solvecube.crosssolve()
 while True:
-  displaycube(solvetempcube,0.5)
+  displaycube(solvecube,0.5)

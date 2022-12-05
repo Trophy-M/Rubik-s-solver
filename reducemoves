@@ -1,7 +1,5 @@
-from solver import *
 from cube import *
 from varstore import *
-from movelibrary import *
 from interface import *
 import time
 import pandas

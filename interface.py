@@ -56,6 +56,7 @@ def placecube(Rubikcube, pos,window,my_font):
             window.blit(text_surface, (x+10,y))
             pygame.display.update()
 def displaycube(Rubikcube, delay):
+    Rubikcube.updatedata()
     gridcoordinates = [[350,400,450,350,400,450,350,400,450],[50,50,50,100,100,100,150,150,150]]
     my_font = pygame.font.SysFont('Arial', 30)
     window = pygame.display.set_mode((1000,800))
