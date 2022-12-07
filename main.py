@@ -17,7 +17,14 @@ dface = ['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9']
 
 pygame.font.init()
 my_font = pygame.font.SysFont('Arial', 30)
-Rubikcube = cube(uface, lface, fface, rface, bface, dface)
+
+solver.maketurns = maketurns
+Rubikcube = solver(['u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'u7', 'u8', 'u9']
+,['l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9']
+,['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9']
+,['r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9']
+,['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b9']
+,['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9'])
 
 
 lastinstance = getlastinstance(Rubikcube)
@@ -26,7 +33,6 @@ if __name__ == '__main__':
     window.fill(white)
     run = True
     pygame.display.flip()
-    placecube(Rubikcube.cu, gridcoordinates,window,my_font)
     
     
     #maketurns(Rubikcube, ['UP', 'R2', 'L2', 'F2', 'B2', 'UP', 'R', 'L', 'F', 'BP', 'U', 'F2', 'D2', 'R2', 'L2', 'F2', 'U2', 'F2', 'UP', 'F2'])
@@ -47,6 +53,8 @@ if __name__ == '__main__':
                     turnL(Rubikcube)
                 if event.key == K_f:
                     turnF(Rubikcube)
+                if event.key == K_s:
+                    Rubikcube.solvecube()
                 if event.key == K_0:
                     Rubikcube.shufflecube()
                 if event.key == K_1:
@@ -57,8 +65,7 @@ if __name__ == '__main__':
                     rotcube(Rubikcube,'y')
                 if event.key == K_z:
                     rotcube(Rubikcube,'z')
-        
-            
+                displaycube(Rubikcube,0)
         #check if the cube has been updated//True then updates interface
         if lastinstance != Rubikcube.cu:
             placecube(Rubikcube.cu, gridcoordinates,window, my_font)

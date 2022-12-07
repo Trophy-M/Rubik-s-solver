@@ -49,17 +49,23 @@ class solver(cube):
 
   #assuming we already have an arrangement of the up faces. We can begin rearranging the edges such that it is in the correct place.
   def crosssolve(self):
-    #edgeswapalg = ['R', 'U', 'RP', 'U', 'R', 'U2', 'RP', 'U']
+    edgeswapalg = ['R', 'U', 'RP', 'U', 'R', 'U2', 'RP', 'U']
     #in a acw direction == y axis direction
     while not (checkifcross(self)):
       #unsolvededgesmap = [self.fface[1],self.rface[1],self.bface[1],self.lface[1]]
       displaycube(self,0.5)
       if self.cu[2][1][0] != self.cu[2][4][0]:
         maketurns(self, ['R', 'U', 'RP', 'U', 'R', 'U2', 'RP', 'U'])
-        for i in range(0,3): rotcube(self,'y')
+        rotcube(self,'y')
       else:
-        for i in range(0,3): rotcube(self,'y')
-      
+        rotcube(self,'y')
+      unsolvededgesmap = [self.fface[1],self.rface[1],self.bface[1],self.lface[1]]
+      while self.fface[1][0] != self.fface[4][0]:
+        displaycube(self,0.5)
+        maketurns(self, edgeswapalg)
+        if self.fface[1][0] == self.fface[4][0]:
+          break
+        rotcube(self,'y')
 
   def crossarrange(self):
     while not (self.cu[0][1][0] == self.cu[0][3][0] == self.cu[0][5][0] == self.cu[0][7][0]):
@@ -99,13 +105,11 @@ class solver(cube):
               maketurns(self, ['UP'])
               rotcube(self, 'y')
             self.solvefrontedge(i,whitefacemap)
-
-              
+           
       whitefacemap = facemapping(self, ['u2', 'u4', 'u6', 'u8'])
     
   #solve corner in the bottom layer in DFR position to UFR
   def cornersfromdown(self):
-    print(self.dface[2][0])
     if self.fface[8][0] == 'u':
       maketurns(self, ['F', 'D' ,'FP'])
     elif self.rface[6][0] == 'u':
@@ -127,14 +131,14 @@ class solver(cube):
   def cornersarrange(self):
     while self.checkifcrosscorners() == False:
       displaycube(solvecube,0.5)
-      if 'u' in [self.fface[8][0], self.rface[6][0], self.dface[3][0]]:
-        while 'u' in [self.fface[2][0], self.rface[0][0], self.uface[8][0]]:
+      if 'u' in [self.cu[2][8][0], self.cu[3][6][0], self.cu[5][3][0]]:
+        while 'u' in [self.cu[2][2][0], self.cu[3][0][0], self.cu[0][8][0]]:
           maketurns(self,['D'])
           rotcube(self,'y')
         self.cornersfromdown()
-      rotcube(self,'y')
-    
-
+      else:
+        rotcube(self,'y')
+  
 
   def solvecube(self):
     self.crossarrange()
