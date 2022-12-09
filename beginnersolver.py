@@ -80,27 +80,32 @@ class solver(cube):
           maketurns(self, ['U'])
         whitefacemap = facemapping(self, ['u2', 'u4', 'u6', 'u8'])
         displaycube(self,0.5)
+        #print(whitefacemap)
         #self.uface[4][0],self.fface[4][0],self.dface[4][0]
+        print(whitefacemap[i])
         if whitefacemap[i][0] == self.uface[4][0]:
           pass
-        elif whitefacemap[i][0] == self.fface[4][0]:
+        elif whitefacemap[i][0] == 'f':
           self.solvefrontedge(i,whitefacemap)
-        elif whitefacemap[i][0] == self.dface[4][0]:
+        elif whitefacemap[i][0] == 'd':
             #keep rotating until its is in d1 then f2
           while whitefacemap[i] != 'd2':
             maketurns(self, ['D'])
             whitefacemap[i] = self.getfaceletpos(['u2', 'u4', 'u6', 'u8'][i])
           maketurns(self, ['F2'])
-        elif whitefacemap[i][0] == self.rface[4][0]:
+        elif whitefacemap[i][0] == 'r':
+          print('r face')
           maketurns(self, ['UP'])
           rotcube(self, 'y')
           self.solvefrontedge(i,whitefacemap)
-        elif whitefacemap[i][0] == self.bface[4][0]:
+        elif whitefacemap[i][0] == 'b':
+          print('b face')
           for i in range(0,2):
             maketurns(self, ['UP'])
             rotcube(self, 'y')
           self.solvefrontedge(i,whitefacemap)
         elif whitefacemap[i][0] == self.lface[4][0]:
+          print('d face')
           for i in range(0,3):
             maketurns(self, ['UP'])
             rotcube(self, 'y')
@@ -123,18 +128,48 @@ class solver(cube):
     crosscorners = ['dbl','dbr','dfl','dfr']
     for corners in crosscorners:
       cornersfacelets = self.corners[corners]
-      print(cornersfacelets)
+      #print(cornersfacelets)
       for facelets in cornersfacelets:
         if self.uface[4][0] in facelets:
           crosscorners = False
-    print(crosscorners)
+    #print(crosscorners)
     return crosscorners
 
   #check if corners in right place, doesn't matter the oreintation
   def checkifcornersright(self):
     cornersright = False
-    if self.uface[4][0] in [self.cu[2][2][0], self.cu[3][0][0], self.cu[0][8][0]] and self.cu[2][4][0] in [self.cu[2][2][0], self.cu[3][0][0], self.cu[0][8][0]]:
+    cornersupright = False
+    cornersmatchingright = False
+    #print('corners: ', [self.uface[8][0],self.fface[2][0],self.rface[0][0]])
+    if (self.uface[4][0] in [self.uface[6][0],self.fface[0][0],self.lface[2][0]] and self.uface[4][0] in [self.uface[8][0],self.fface[2][0],self.rface[0][0]]\
+      and self.uface[4][0] in [self.uface[0][0],self.bface[2][0],self.lface[0][0]] and self.uface[4][0] in [self.uface[2][0],self.bface[0][0],self.rface[2][0]]):
+      cornersupright = True
+    if (x in [self.fface[4][0],self.lface[4][0]] for x in [self.uface[6][0],self.fface[0][0],self.lface[2][0]]) and\
+      (x in [self.fface[4][0],self.rface[4][0]] for x in [self.uface[8][0],self.fface[2][0],self.rface[0][0]]) and\
+      (x in [self.bface[4][0],self.lface[4][0]] for x in [self.uface[0][0],self.bface[2][0],self.lface[0][0]]) and\
+      (x in [self.bface[4][0],self.rface[4][0]] for x in [self.uface[2][0],self.bface[0][0],self.rface[2][0]]):
+      cornersmatchingright = True
+    
+    if cornersmatchingright == True and cornersupright == True:
       cornersright = True
+
+    return cornersright
+  
+  def checkifufrright(self):
+    self.updatedata()
+    cornersright = False
+    cornersupright = False
+    cornersmatchingright = False
+    if self.uface[4][0] in [self.uface[8][0],self.fface[2][0],self.rface[0][0]]:
+      cornersupright = True
+
+    print([self.fface[4][0],self.rface[4][0]],'and', [self.uface[8][0],self.fface[2][0],self.rface[0][0]])
+    if set([self.fface[4][0],self.rface[4][0]]).issubset(set([self.uface[8][0],self.fface[2][0],self.rface[0][0]])):
+      cornersmatchingright = True
+
+    if cornersmatchingright == True and cornersupright == True:
+      cornersright = True
+    
     return cornersright
 
 
@@ -150,26 +185,27 @@ class solver(cube):
         rotcube(self,'y')
     
   def cornerssolve(self):
-    amountofsolvedcorners = 0
-    awayfromsolved = 0
-    while amountofsolvedcorners < 4:
-      displaycube(self, 0.5)
-      #orient the corner correctly if the corners is in its correctposition but in the wrong oreintation
-      #while (self.uface[8][0] != self.uface[4][0] or self.fface[2][0] != self.fface[4][0]) and self.checkifcornersright():
-        #maketurns(self,['RP','DP','R','D'])
-      #now we check if the corner is not right, then we return to previous right then apply alg. Right, add to amountofsolvedcorners.
-      if self.checkifcornersright() == True:
-         amountofsolvedcorners += 1
-         awayfromsolved += 1
-         rotcube(self,'y')
-      elif self.checkifcornersright() == False:
-        amountofsolvedcorners = 0
-        if awayfromsolved > 0:
-          for i in range(0, 4-awayfromsolved): rotcube(self,'y')
+    solvedcornersbool = [False,False,False,False]
+    while solvedcornersbool != [True, True, True, True]:
+      displaycube(self,0.5)
+      for i in range(0,4):
+        solvedcornersbool[i] = self.checkifufrright()
+        rotcube(self,'y')
+      if solvedcornersbool == [True, True, True, True]:
+        break
+      print(solvedcornersbool)
+      if True in solvedcornersbool:
+          for i in range(0,solvedcornersbool.index(True)): rotcube(self,'y')
           maketurns(self,['U', 'R', 'UP', 'LP', 'U', 'RP', 'UP', 'L'])
-          awayfromsolved = 0
-        else:
-          rotcube(self,'y')
+          for i in range(0,4-solvedcornersbool.index(True)): rotcube(self,'y')
+      else:
+        maketurns(self,['U', 'R', 'UP', 'LP', 'U', 'RP', 'UP', 'L'])
+    self.updatedata()
+    for i in range(0,4):
+      displaycube(self,0.5)
+      while [self.uface[8][0],self.fface[2][0],self.rface[0][0]] != [self.uface[4][0],self.fface[4][0],self.rface[4][0]]:
+        maketurns(self,['RP','DP','R','D'])
+      rotcube(self,'y')
         
 
 
