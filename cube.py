@@ -121,6 +121,14 @@ class cube:
                 solvededge = items
                 break
         return solvededge
+    
+    def getcornerpos(self, thiscorner):
+        solvedcorner = None
+        for items in solvedcorners:
+            if any(x in solvedcorner[items] for x in self.corners[thiscorner]):
+                solvedcorner = items
+                break
+        return solvedcorner
 
     #search for edge (solved) and find where it is (scrambled)
     #current problem: the faces in the edge isn't fixed
@@ -133,6 +141,8 @@ class cube:
                 thisedgeat = edges
                 break
         return thisedgeat
+    
+
                 
 
 
