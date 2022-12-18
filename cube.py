@@ -69,10 +69,10 @@ class cube:
             'ubr':[self.uface[2],self.bface[0],self.rface[2]],
             'ufl':[self.uface[6],self.fface[0],self.lface[2]],
             'ufr':[self.uface[8],self.fface[2],self.rface[0]],
-            'dbl':[self.dface[2],self.bface[8],self.lface[6]],
-            'dbr':[self.dface[0],self.bface[6],self.rface[8]],
-            'dfl':[self.dface[8],self.fface[6],self.lface[8]],
-            'dfr':[self.dface[6],self.fface[8],self.rface[6]],
+            'dbl':[self.dface[6],self.bface[8],self.lface[6]],
+            'dbr':[self.dface[8],self.bface[6],self.rface[8]],
+            'dfl':[self.dface[0],self.fface[6],self.lface[8]],
+            'dfr':[self.dface[2],self.fface[8],self.rface[6]],
         }
         self.uface = self.cu[0]  # 0
         self.lface = self.cu[1]  # 1

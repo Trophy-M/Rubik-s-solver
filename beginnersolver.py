@@ -53,7 +53,7 @@ class solver(cube):
     #in a acw direction == y axis direction
     while not (checkifcross(self)):
       #unsolvededgesmap = [self.fface[1],self.rface[1],self.bface[1],self.lface[1]]
-      #displaycube(self,0.5)
+      ##displaycube(self,0.5)
       if self.cu[2][1][0] != self.cu[2][4][0]:
         maketurns(self, ['R', 'U', 'RP', 'U', 'R', 'U2', 'RP', 'U'])
         for i in range(0,3): rotcube(self,'y')
@@ -61,7 +61,7 @@ class solver(cube):
         for i in range(0,3): rotcube(self,'y')
       unsolvededgesmap = [self.fface[1],self.rface[1],self.bface[1],self.lface[1]]
       while self.fface[1][0] != self.fface[4][0]:
-        #displaycube(self,0.5)
+        ##displaycube(self,0.5)
         maketurns(self, edgeswapalg)
         if self.fface[1][0] == self.fface[4][0]:
           break
@@ -81,7 +81,7 @@ class solver(cube):
           c += 1
           maketurns(self, ['U'])
         whitefacemap = facemapping(self, whiteedgesfacelet)
-        #displaycube(self,0.5)
+        ##displaycube(self,0.5)
         #print(whitefacemap)
         #self.uface[4][0],self.fface[4][0],self.dface[4][0]
         #print(whitefacemap[i])
@@ -174,56 +174,103 @@ class solver(cube):
     
     return cornersright
 
+  #input in a facelet and see if it matches with the ufr corner above, assuming up-cross is solved
+  def checkfaceletmatchUFRcorner(self,upfacelet):
+    DandUFRcorner = False
+    adjacent = {
+      'u1':['u2','u4'],
+      'u3':['u2','u6'],
+      'u7':['u4','u8'],
+      'u9':['u6','u8'],
+    }
+    if set(adjacent[upfacelet]).issubset(set([self.cu[0][5],self.cu[0][7]])):
+      DandUFRcorner = True
+    return DandUFRcorner
+
+  def checkufrlineswithdfr(self):
+    self.updatedata()
+    linesup = False
+    if self.fface[4][0] in [self.dface[2][0],self.fface[8][0],self.rface[6][0]] and self.rface[4][0] in [self.dface[2][0],self.fface[8][0],self.rface[6][0]]\
+          and self.uface[4][0] in [self.dface[2][0],self.fface[8][0],self.rface[6][0]]:
+      linesup = True
+    return linesup
+  #assuming the target corner is already in dfr, to ufr, white facing up
+  def cornersolve(self):
+    self.updatedata()
+    if self.uface[4][0] == self.fface[8][0]:
+      for i in range(0,5): maketurns(self, ['RP', 'DP', 'R', 'D'])
+    elif self.uface[4][0] == self.rface[6][0]:
+      maketurns(self, ['RP', 'DP', 'R', 'D'])
+    elif self.uface[4][0] == self.dface[2][0]:
+      for i in range(0,3): maketurns(self, ['RP', 'DP', 'R', 'D'])
 
   def cornersarrange(self):
-    while self.checkifcrosscorners() == False:
+    cornersmap = {}
+    adjacent = {
+      'u1':['u2','u4'],
+      'u3':['u2','u6'],
+      'u7':['u4','u8'],
+      'u9':['u6','u8'],
+    }
+    for facelets in [self.cu[0][4][0]+'1',self.cu[0][4][0]+'3',self.cu[0][4][0]+'7',self.cu[0][4][0]+'9']:
+      cornersmap[facelets] = self.getfaceletpos(facelets)
+    
+    #keys are u1.... and cornermaps[keys] are the position of those faces
+    for keys in cornersmap:
+      #print('at',keys)
+      #first in U Layer
+      self.updatedata()
       #displaycube(self,0.5)
-      if self.uface[4][0] in [self.cu[2][8][0], self.cu[3][6][0], self.cu[5][2][0]]:
-        while self.uface[4][0] in [self.cu[2][2][0], self.cu[3][0][0], self.cu[0][8][0]]:
+      if keys in self.uface or keys in [self.cu[1][0],self.cu[1][2],self.cu[2][0],self.cu[2][2],\
+      self.cu[3][0],self.cu[3][2],self.cu[4][0],self.cu[4][2]]:
+        #print('In U layer',keys not in self.corners['ufl'],self.checkufrlineswithdfr() == False)
+        while keys not in self.corners['ufl']:
+          self.updatedata()
+          #print(keys,self.corners['ufl'])
+          if keys in self.corners['ufl']:
+            break
+          #print('get face in ufl')
+          #displaycube(self,0.5)
+          rotcube(self,'y')
+          #print(keys, ':', self.corners['ufl'])
+          self.updatedata()
+        maketurns(self,['L','D','LP'])
+        
+        while self.checkufrlineswithdfr() == False:
+          if self.checkufrlineswithdfr() == True:
+            break
+          #print('get the right corner above U')
           #displaycube(self,0.5)
           maketurns(self,['D'])
           rotcube(self,'y')
-        self.cornersfromdown()
-      else:
-        rotcube(self,'y')
-    for i in range(0,4):
-      while self.cu[0][8][0] != 'u':
-        #displaycube(self,0.5)
-        maketurns(self,['RP','DP','R','D'])
-      rotcube(self,'Y')
-    
-  #use cfop corner method
-  def cornerssolve(self):
-    while self.cu[0][1][1] != '2':
-      rotcube(self,'y')
-    if self.cu[0][0][1] == '1':
-      pass
-    elif self.cu[0][2][1] == '1':
-      for i in range(0,2):
-        rotcube(self,'x')
-        maketurns(self,['L2', 'D2', 'LP', 'UP', 'L', 'D2', 'LP', 'U', 'LP'])
-        for i in range(0,3): rotcube(self,'x')
-    elif self.cu[0][6][1] == '1':
-      rotcube(self,'x')
-      maketurns(self,['L2', 'D2', 'LP', 'UP', 'L', 'D2', 'LP', 'U', 'LP'])
-      for i in range(0,3): rotcube(self,'x')
-    elif self.cu[0][8][1] == '1':
-      for i in range(0,3): rotcube(self,'x')
-      maketurns(self,['L2', 'D2', 'L', 'U', 'LP', 'D2', 'L', 'UP', 'L'])
-      rotcube(self,'x')
+        self.cornersolve()
+      elif keys in self.dface or keys in [self.cu[1][6],self.cu[1][8],self.cu[2][6],self.cu[2][8],\
+      self.cu[3][6],self.cu[3][8],self.cu[4][6],self.cu[4][8]]:
+        #print('In D layer',keys not in self.corners,self.checkufrlineswithdfr() == False)
+        while keys not in self.corners['dfr']:
+          self.updatedata()
+          if keys in self.corners['dfr']:
+            break
+          #print('get face in dfr')
+          #displaycube(self,0.5)
+          rotcube(self,'y')
+          #print(keys, ':', self.corners['dfr'] )
+          self.updatedata()
 
-    othercorners = [int(self.cu[0][2][1]),int(self.cu[0][6][1]),int(self.cu[0][8][1])]
-    if othercorners == [3,7,9]:
-      pass
-    elif othercorners == [9,3,7] or othercorners == [7,9,3]:
-      self.rotcube(self,'y')
-      while othercorners != [3,7,9]:
-        maketurns(self,['U', 'R', 'UP', 'LP', 'U', 'RP', 'UP', 'L'])
-        othercorners = [int(self.cu[0][2][1]),int(self.cu[0][6][1]),int(self.cu[0][8][1])]
+        while self.checkufrlineswithdfr() == False:
+          if self.checkufrlineswithdfr() == True:
+            break
+          #print('get the right corner above D')
+          #displaycube(self,0.5)
+          maketurns(self,['D'])
+          rotcube(self,'y')
+        self.cornersolve()
+      #displaycube(self,0.5)
+  
+  def secondlayersolve(self):
+    pass
+        
 
-     
-    def secondlayersolve(self):
-      pass
 
 
 
@@ -234,7 +281,6 @@ class solver(cube):
     self.crosssolve()
     print('Cross solved')
     self.cornersarrange()
-    self.cornerssolve()
     print('Corners solved')
 
 solver.maketurns = maketurns
