@@ -31,7 +31,7 @@ def facemapping(Rubikcube, face):
 
 
 #arrange white faces on up face
-class solver(cube):
+class beginnersolver(cube):
   def __init__(self,uface, lface, fface, rface, bface, dface):
     super().__init__(uface, lface, fface, rface, bface, dface)
   
@@ -331,18 +331,47 @@ class solver(cube):
             rotcube(self,'y')
           self.secondlayeredgeinsert()
 
+  def lastlayercornerssolve(self):
+    solvedcornersbool = [False,False,False,False]
+    while solvedcornersbool != [True, True, True, True]:
+      for i in range(0,4):
+        solvedcornersbool[i] = self.checkifufrright()
+        rotcube(self,'y')
+      if solvedcornersbool == [True, True, True, True]:
+        break
+      if True in solvedcornersbool:
+          for i in range(0,solvedcornersbool.index(True)): rotcube(self,'y')
+          maketurns(self,['U', 'R', 'UP', 'LP', 'U', 'RP', 'UP', 'L'])
+          for i in range(0,4-solvedcornersbool.index(True)): rotcube(self,'y')
+      else:
+        maketurns(self,['U', 'R', 'UP', 'LP', 'U', 'RP', 'UP', 'L'])
+    self.updatedata()
+    for i in range(0,4):
+      while self.cu[0][8][0] != self.cu[0][4][0]:
+        maketurns(self,['RP', 'DP', 'R', 'D'])
+      maketurns(self,['U'])
+    
           
   def lastlayercross(self):
     #cross arrange alg
     while (self.cu[0][1][0] == self.cu[0][3][0] == self.cu[0][4][0] == self.cu[0][5][0] == self.cu[0][7][0]) == False:
+      #make sure it is L shaped
+      if ((self.cu[0][4][0] == self.cu[0][5][0] == self.cu[0][7][0]) and (self.cu[0][1][0] != self.cu[0][3][0]))\
+        or ((self.cu[0][4][0] == self.cu[0][3][0] == self.cu[0][7][0]) and (self.cu[0][1][0] != self.cu[0][5][0]))\
+        or ((self.cu[0][4][0] == self.cu[0][1][0] == self.cu[0][5][0]) and (self.cu[0][3][0] != self.cu[0][7][0]))== True:
+        while (self.cu[0][4][0] == self.cu[0][1][0] == self.cu[0][3][0]) == False:
+          rotcube(self,'y')
+      #make sure it is horizontal line
+      elif ((self.cu[0][1][0] == self.cu[0][4][0] == self.cu[0][7][0]) and (self.cu[0][3][0] != self.cu[0][5][0])) == True:
+        for i in range(0,2): rotcube(self,'y')
       maketurns(self, ['F','R','U','RP','UP','FP'])
-      displaycube(self,0.5)
-          
-
-
-
-
+    self.crosssolve()
+    self.lastlayercornerssolve()
+    for i in range(0,2): rotcube(self,'x')
+    while self.cu[2][4][0] != 'f':
+      rotcube(self,'y')
     
+    #last corner swap
 
   def solvecube(self):
     self.crossarrange()
@@ -352,17 +381,5 @@ class solver(cube):
     print('Corners solved')
     self.secondlayersolve()
     print('Second Layer solved')
-    solvecube.lastlayercross()
+    self.lastlayercross()
     print('Cube solved')
-
-solver.maketurns = maketurns
-solvecube = solver(['u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'u7', 'u8', 'u9']
-,['l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9']
-,['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9']
-,['r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9']
-,['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b9']
-,['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9'])
-solvecube.shufflecube()
-solvecube.solvecube()
-while True:
-  displaycube(solvecube,0.5)
