@@ -53,7 +53,7 @@ class solver(cube):
     #in a acw direction == y axis direction
     while not (checkifcross(self)):
       #unsolvededgesmap = [self.fface[1],self.rface[1],self.bface[1],self.lface[1]]
-      ##displaycube(self,0.5)
+      ###displaycube(self,0.5)
       if self.cu[2][1][0] != self.cu[2][4][0]:
         maketurns(self, ['R', 'U', 'RP', 'U', 'R', 'U2', 'RP', 'U'])
         for i in range(0,3): rotcube(self,'y')
@@ -61,7 +61,7 @@ class solver(cube):
         for i in range(0,3): rotcube(self,'y')
       unsolvededgesmap = [self.fface[1],self.rface[1],self.bface[1],self.lface[1]]
       while self.fface[1][0] != self.fface[4][0]:
-        ##displaycube(self,0.5)
+        ###displaycube(self,0.5)
         maketurns(self, edgeswapalg)
         if self.fface[1][0] == self.fface[4][0]:
           break
@@ -81,7 +81,7 @@ class solver(cube):
           c += 1
           maketurns(self, ['U'])
         whitefacemap = facemapping(self, whiteedgesfacelet)
-        ##displaycube(self,0.5)
+        ###displaycube(self,0.5)
         #print(whitefacemap)
         #self.uface[4][0],self.fface[4][0],self.dface[4][0]
         #print(whitefacemap[i])
@@ -220,7 +220,7 @@ class solver(cube):
       #print('at',keys)
       #first in U Layer
       self.updatedata()
-      #displaycube(self,0.5)
+      ##displaycube(self,0.5)
       if keys in self.uface or keys in [self.cu[1][0],self.cu[1][2],self.cu[2][0],self.cu[2][2],\
       self.cu[3][0],self.cu[3][2],self.cu[4][0],self.cu[4][2]]:
         #print('In U layer',keys not in self.corners['ufl'],self.checkufrlineswithdfr() == False)
@@ -230,7 +230,7 @@ class solver(cube):
           if keys in self.corners['ufl']:
             break
           #print('get face in ufl')
-          #displaycube(self,0.5)
+          ##displaycube(self,0.5)
           rotcube(self,'y')
           #print(keys, ':', self.corners['ufl'])
           self.updatedata()
@@ -240,7 +240,7 @@ class solver(cube):
           if self.checkufrlineswithdfr() == True:
             break
           #print('get the right corner above U')
-          #displaycube(self,0.5)
+          ##displaycube(self,0.5)
           maketurns(self,['D'])
           rotcube(self,'y')
         self.cornersolve()
@@ -252,7 +252,7 @@ class solver(cube):
           if keys in self.corners['dfr']:
             break
           #print('get face in dfr')
-          #displaycube(self,0.5)
+          ##displaycube(self,0.5)
           rotcube(self,'y')
           #print(keys, ':', self.corners['dfr'] )
           self.updatedata()
@@ -261,15 +261,83 @@ class solver(cube):
           if self.checkufrlineswithdfr() == True:
             break
           #print('get the right corner above D')
-          #displaycube(self,0.5)
+          ##displaycube(self,0.5)
           maketurns(self,['D'])
           rotcube(self,'y')
         self.cornersolve()
-      #displaycube(self,0.5)
+      ##displaycube(self,0.5)
   
+  #assuming the third layer edge already matched with the face
+  def secondlayeredgeinsert(self):
+    if self.cu[0][7][0] == self.cu[3][4][0]:
+      maketurns(self,['U','R','UP','RP','UP','FP','U','F'])
+    elif self.cu[0][7][0] == self.cu[1][4][0]:
+      maketurns(self,['UP','LP','U','L','U','F','UP','FP'])
+
+  def isSecondLayerSolved(self):
+    solved = False
+    facessolved = 0
+    for i in range(1,5):
+      if self.cu[i][3][0] == self.cu[i][4][0] == self.cu[i][5][0] == self.cu[i][6][0] == self.cu[i][7][0] == self.cu[i][8][0]:
+        facessolved += 1
+    if facessolved == 4:
+      solved = True
+    
+    return solved
+
   def secondlayersolve(self):
-    pass
-        
+    for i in range(0,2): rotcube(self, 'x')
+    faceletmap = {}
+    secondlayerfacelet = [self.cu[1][4][0] + '4',self.cu[1][4][0] + '6',self.cu[2][4][0] + '4',self.cu[2][4][0] + '6',\
+    self.cu[3][4][0] + '4',self.cu[3][4][0] + '6',self.cu[4][4][0] + '4',self.cu[4][4][0] + '6']
+    while self.isSecondLayerSolved() == False:
+      for facelet in secondlayerfacelet:
+        faceletmap[facelet] = self.getfaceletpos(facelet)
+      for keys in faceletmap:
+        faceletmap[keys] = self.getfaceletpos(keys)
+        #displaycube(self,0.5)
+        #skip if position is an up edge
+        if faceletmap[keys][0] == self.cu[0][4][0] or faceletmap[keys][0] == self.cu[5][4][0]:
+          continue
+        if faceletmap[keys] in secondlayerfacelet:
+          if faceletmap[keys] == keys:
+            pass
+          elif faceletmap[keys] != keys:
+            while faceletmap[keys][0] != 'f':
+              #displaycube(self,0.5)
+              rotcube(self,'y')
+              faceletmap[keys] = self.getfaceletpos(keys)
+            #to right
+            if faceletmap[keys][1] == '6':
+              maketurns(self,['U','R','UP','RP','UP','FP','U','F','U2'])
+            elif faceletmap[keys][1] == '4':
+              maketurns(self,['UP','LP','U','L','U','F','UP','FP','U2'])
+            
+            if faceletmap[keys][0] == self.cu[0][4][0]:
+              continue
+            while self.cu[2][1][0] != self.cu[2][4][0]:
+              #displaycube(self,0.5)
+              maketurns(self,['UP'])
+              rotcube(self,'y')
+            self.secondlayeredgeinsert()
+        else:
+          while faceletmap[keys][0] != 'f':
+            #displaycube(self,0.5)
+            rotcube(self,'Y')
+            faceletmap[keys] = self.getfaceletpos(keys)
+          while self.cu[2][1][0] != self.cu[2][4][0]:
+            #displaycube(self,0.5)
+            maketurns(self,['UP'])
+            rotcube(self,'y')
+          self.secondlayeredgeinsert()
+
+          
+  def lastlayercross(self):
+    #cross arrange alg
+    while (self.cu[0][1][0] == self.cu[0][3][0] == self.cu[0][4][0] == self.cu[0][5][0] == self.cu[0][7][0]) == False:
+      maketurns(self, ['F','R','U','RP','UP','FP'])
+      displaycube(self,0.5)
+          
 
 
 
@@ -282,6 +350,10 @@ class solver(cube):
     print('Cross solved')
     self.cornersarrange()
     print('Corners solved')
+    self.secondlayersolve()
+    print('Second Layer solved')
+    solvecube.lastlayercross()
+    print('Cube solved')
 
 solver.maketurns = maketurns
 solvecube = solver(['u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'u7', 'u8', 'u9']

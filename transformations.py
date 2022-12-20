@@ -1,5 +1,6 @@
 import time
 from varstore import *
+from interface import displaycube
 
 def rotate(arr):
     arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6], arr[7], arr[8] = arr[6], arr[3], arr[0], arr[7], arr[4], \
@@ -94,6 +95,7 @@ def turnB(Rubikcube):
     Rubikcube.updatedata()
 
 def rotcube(Rubikcube, axis):
+    #displaycube(Rubikcube,0.2)
     axis = axis.lower()
     tempu,templ,tempf,tempr,tempb,tempd = Rubikcube.cu[0], Rubikcube.cu[1], Rubikcube.cu[2], Rubikcube.cu[3], Rubikcube.cu[4], Rubikcube.cu[5]
     match axis:
@@ -120,6 +122,7 @@ def rotcube(Rubikcube, axis):
 def maketurns(tempcube, theturn):
     tempcube.updatedata()
     for turn in theturn:
+        #displaycube(tempcube,0.2)
         turn  = turn.upper()
         match turn:
             case 'R':
