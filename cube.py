@@ -59,10 +59,10 @@ class cube:
         'fr':[self.fface[5],self.rface[3]],
         'bl':[self.bface[5],self.lface[3]], #check bface connections
         'br':[self.bface[3],self.rface[5]],
-        'db':[self.dface[1],self.bface[7]],
-        'dl':[self.dface[5],self.lface[7]],
-        'df':[self.dface[7],self.fface[7]],
-        'dr':[self.dface[3],self.rface[7]],
+        'db':[self.dface[7],self.bface[7]],
+        'dl':[self.dface[3],self.lface[7]],
+        'df':[self.dface[1],self.fface[7]],
+        'dr':[self.dface[5],self.rface[7]],
         }
         self.corners = {
             'ubl':[self.uface[0],self.bface[2],self.lface[0]],

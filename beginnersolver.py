@@ -67,53 +67,83 @@ class beginnersolver(cube):
           break
         for i in range(0,3): rotcube(self,'y')
 
-  def crossarrange(self):
-    whiteedgesfacelet = [self.cu[0][4][0]+'2',self.cu[0][4][0]+'4',self.cu[0][4][0]+'6',self.cu[0][4][0]+'8']
-    while not (self.cu[0][1][0] == self.cu[0][3][0] == self.cu[0][5][0] == self.cu[0][7][0]):
-      self.updatedata()
-      if (self.cu[0][1][0] == self.cu[0][3][0] == self.cu[0][5][0] == self.cu[0][7][0]):
-        break
-      whitefacemap = facemapping(self, whiteedgesfacelet)
-      #faceindex - index of face are we currently looking at/ items - face we're looking at
-      for i in range(0,len(whitefacemap)):
+  #Finds the layer the facelet is in; dont work for core piece
+  def findlayer(self, facelet):
+    layer = 0
+    self.updatedata()
+    if facelet in (self.corners['ufl'] + self.corners['ufr'] + self.corners['ubl'] + self.corners['ubr'] + self.edges['ub']\
+    + self.edges['ul'] + self.edges['uf'] + self.edges['ur']):
+      layer = 1
+    elif facelet in self.edges['fl'] + self.edges['fr'] + self.edges['bl'] + self.edges['br']:
+      layer = 2
+    elif facelet in (self.corners['dfl'] + self.corners['dfr'] + self.corners['dbl'] + self.corners['dbr'] + self.edges['db']\
+    + self.edges['dl'] + self.edges['df'] + self.edges['dr']):
+      layer = 3
+    return layer
+
+  #assuming edge is already in second or third layer fron edge; also flips the edge once if misoriented
+  def crosssolvefrontface(self,thefacelet):
+    self.updatedata()
+    if thefacelet in self.edges['fl']:
+      maketurns(self,['U','LP','UP','L'])
+    elif thefacelet in self.edges['fr']:
+      maketurns(self,['UP','R','U','RP'])
+    elif thefacelet in self.edges['df']:
+      maketurns(self,['FP','UP','R','U','RP'])
+    
+    if self.cu[2][1][0] == self.cu[5][4][0]:
+      maketurns(self,['F', 'UP', 'R', 'U','RP'])
+
+  def crosssolveFL(self):
+    upedgesfacelet = [self.cu[0][4][0]+'2',self.cu[0][4][0]+'4',self.cu[0][4][0]+'6',self.cu[0][4][0]+'8']
+    upedgesmap = {}
+    for i in range(0,2): rotcube(self,'x')
+    for facelet in upedgesfacelet:
+      upedgesmap[facelet] = self.getfaceletpos(facelet)
+    while not (self.cu[5][1][0] == self.cu[5][3][0] == self.cu[5][5][0] == self.cu[5][7][0]):
+      for keys in upedgesfacelet:
+        print(keys, self.findlayer(keys),self.getfaceletpos(keys))
+        if self.findlayer(keys) == 1:
+          if keys in self.cu[0]:
+            while self.getfaceletpos(keys) != 'u8':
+              rotcube(self,'y')
+          else:
+            while self.getfaceletpos(keys) != 'f2':
+              rotcube(self,'y')
+            maketurns(self,['F', 'UP', 'R', 'U'])
+          while self.cu[2][1][0] != self.cu[2][4][0]:
+            maketurns(self,['UP'])
+            rotcube(self,'y')
+        elif self.findlayer(keys) == 2:
+          while keys not in self.cu[2]:
+            rotcube(self,'y')
+          self.crosssolvefrontface(keys)     
+          while self.cu[2][1][0] != self.cu[2][4][0]:
+              maketurns(self,['UP'])
+              rotcube(self,'y')
+        elif self.findlayer(keys) == 3:
+          if keys in self.cu[5]:
+            while self.getfaceletpos(keys) != 'd2':
+              rotcube(self,'y')
+            if self.cu[2][4][0] == self.cu[2][7][0]:
+              continue
+            self.crosssolvefrontface(keys)
+          else:
+            while self.getfaceletpos(keys) != 'f8':
+              rotcube(self,'y')
+            self.crosssolvefrontface(keys)
+          while self.cu[2][1][0] != self.cu[2][4][0]:
+            maketurns(self,['UP'])
+            rotcube(self,'y')
+        maketurns(self,['F2'])
         c = 0
-        while self.edges['uf'][0][0] == self.uface[4][0] and c < 4:
+        while self.cu[2][4][0] == self.cu[2][7][0] and c < 4:
+          rotcube(self,'y')
           c += 1
-          maketurns(self, ['U'])
-        whitefacemap = facemapping(self, whiteedgesfacelet)
-        ###displaycube(self,0.5)
-        #print(whitefacemap)
-        #self.uface[4][0],self.fface[4][0],self.dface[4][0]
-        #print(whitefacemap[i])
-        if whitefacemap[i][0] == self.uface[4][0]:
-          pass
-        elif whitefacemap[i][0] == 'f':
-          self.solvefrontedge(i,whitefacemap)
-        elif whitefacemap[i][0] == self.dface[4][0]:
-            #keep rotating until its is in d1 then f2
-          while whitefacemap[i] != self.dface[4][0]+'2':
-            maketurns(self, ['D'])
-            whitefacemap[i] = self.getfaceletpos(whiteedgesfacelet[i])
-          maketurns(self, ['F2'])
-        elif whitefacemap[i][0] == 'r':
-          #print('r face')
-          maketurns(self, ['UP'])
-          rotcube(self, 'y')
-          self.solvefrontedge(i,whitefacemap)
-        elif whitefacemap[i][0] == 'b':
-          #print('b face')
-          for i in range(0,2):
-            maketurns(self, ['UP'])
-            rotcube(self, 'y')
-          self.solvefrontedge(i,whitefacemap)
-        elif whitefacemap[i][0] == 'l':
-          #print('d face')
-          for i in range(0,3):
-            maketurns(self, ['UP'])
-            rotcube(self, 'y')
-          self.solvefrontedge(i,whitefacemap)
-           
-      whitefacemap = facemapping(self, whiteedgesfacelet)
+    for i in range(0,2): rotcube(self,'x')    
+
+        
+
     
   #solve corner in the bottom layer in DFR position to UFR
   def cornersfromdown(self):
@@ -374,8 +404,7 @@ class beginnersolver(cube):
     #last corner swap
 
   def solvecube(self):
-    self.crossarrange()
-    self.crosssolve()
+    self.crosssolveFL()
     print('Cross solved')
     self.cornersarrange()
     print('Corners solved')
@@ -383,3 +412,16 @@ class beginnersolver(cube):
     print('Second Layer solved')
     self.lastlayercross()
     print('Cube solved')
+
+
+'''beginnersolver.maketurns = maketurns
+solvecube = beginnersolver(['u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'u7', 'u8', 'u9']
+,['l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9']
+,['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9']
+,['r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9']
+,['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b9']
+,['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9'])
+solvecube.shufflecube()
+solvecube.crosssolveFL()
+while True:
+  displaycube(solvecube,0.5)'''
