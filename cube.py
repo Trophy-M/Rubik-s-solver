@@ -141,6 +141,26 @@ class cube:
                 thisedgeat = edges
                 break
         return thisedgeat
+    #Finds the layer the facelet is in
+    def findlayer(self, facelet):
+        layer = 0
+        self.updatedata()
+        if facelet in (self.corners['ufl'] + self.corners['ufr'] + self.corners['ubl'] + self.corners['ubr'] + self.edges['ub']\
+        + self.edges['ul'] + self.edges['uf'] + self.edges['ur']):
+            layer = 1
+        elif facelet in self.edges['fl'] + self.edges['fr'] + self.edges['bl'] + self.edges['br']:
+            layer = 2
+        elif facelet in (self.corners['dfl'] + self.corners['dfr'] + self.corners['dbl'] + self.corners['dbr'] + self.edges['db']\
+        + self.edges['dl'] + self.edges['df'] + self.edges['dr']):
+            layer = 3
+        else:
+            if facelet == self.cu[0][4]:
+                layer = 1
+            elif facelet == self.cu[5][4]:
+                layer = 3
+            else:
+                layer = 2
+        return layer
     
 
                 

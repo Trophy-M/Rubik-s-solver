@@ -1,7 +1,7 @@
 import pygame
+import time
 from varstore import *
 from pygame.locals import *
-import time
 
 def getlastinstance(Rubikcube):
     lastinstance = []

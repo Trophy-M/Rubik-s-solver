@@ -1,13 +1,8 @@
-import pygame
 from cube import *
 from transformations import *
 from varstore import *
-from interface import *
-import time
-pygame.font.init()
-my_font = pygame.font.SysFont('Arial', 30)
-window = pygame.display.set_mode((1000,800))
-window.fill(white)
+#from interface import *
+
 
 #check if top layer forms a cross
 def checkifcross(Rubikcube):
@@ -66,20 +61,6 @@ class beginnersolver(cube):
         if self.fface[1][0] == self.fface[4][0]:
           break
         for i in range(0,3): rotcube(self,'y')
-
-  #Finds the layer the facelet is in; dont work for core piece
-  def findlayer(self, facelet):
-    layer = 0
-    self.updatedata()
-    if facelet in (self.corners['ufl'] + self.corners['ufr'] + self.corners['ubl'] + self.corners['ubr'] + self.edges['ub']\
-    + self.edges['ul'] + self.edges['uf'] + self.edges['ur']):
-      layer = 1
-    elif facelet in self.edges['fl'] + self.edges['fr'] + self.edges['bl'] + self.edges['br']:
-      layer = 2
-    elif facelet in (self.corners['dfl'] + self.corners['dfr'] + self.corners['dbl'] + self.corners['dbr'] + self.edges['db']\
-    + self.edges['dl'] + self.edges['df'] + self.edges['dr']):
-      layer = 3
-    return layer
 
   #assuming edge is already in second or third layer fron edge; also flips the edge once if misoriented
   def crosssolvefrontface(self,thefacelet):
@@ -413,15 +394,3 @@ class beginnersolver(cube):
     self.lastlayercross()
     print('Cube solved')
 
-
-'''beginnersolver.maketurns = maketurns
-solvecube = beginnersolver(['u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'u7', 'u8', 'u9']
-,['l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9']
-,['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9']
-,['r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9']
-,['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b9']
-,['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9'])
-solvecube.shufflecube()
-solvecube.crosssolveFL()
-while True:
-  displaycube(solvecube,0.5)'''

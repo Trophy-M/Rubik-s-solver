@@ -1,10 +1,7 @@
 import sys
 import pygame
-from transformations import *
-from cube import cube
 from interface import *
 from beginnersolver import *
-import time
 from varstore import *
 #from solver import *
 

@@ -1,4 +1,3 @@
-import time
 from varstore import *
 from interface import displaycube
 
@@ -116,12 +115,13 @@ def rotcube(Rubikcube, axis):
             rotate(Rubikcube.cu[3])
             rotate(Rubikcube.cu[5])
             for i in range(0,3):rotate(Rubikcube.cu[4])
-    displaycube(Rubikcube,0.05)
+    displaycube(Rubikcube, 0.1)
                
 
 def maketurns(tempcube, theturn):
     tempcube.updatedata()
     for turn in theturn:
+        displaycube(tempcube, 0.1)
         turn  = turn.upper()
         match turn:
             case 'R':
@@ -160,7 +160,7 @@ def maketurns(tempcube, theturn):
                 for x in range(0,2):turnF(tempcube)
             case 'B2':
                 for x in range(0,2):turnB(tempcube)
-        displaycube(tempcube,0.05)
+
 
 #count the number of specific facelets color in face
 def checkcolorinface(face, color):
