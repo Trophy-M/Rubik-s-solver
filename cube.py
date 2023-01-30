@@ -1,4 +1,5 @@
 import random
+import time
 from transformations import *
 
 
@@ -10,13 +11,14 @@ from transformations import *
 # Stores data as an array with multiple subarrays. Each subarrays represent a face on the cube.
 class cube:
     def __init__(self, uface, lface, fface, rface, bface, dface):
-        self.uface = uface  # 0
-        self.lface = lface  # 1
-        self.fface = fface  # 2
-        self.rface = rface  # 3
-        self.bface = bface  # 4
-        self.dface = dface  # 5
-        self.cu = [uface, lface, fface, rface, bface, dface]
+        self.uface = uface.copy()  # 0
+        self.lface = lface.copy()  # 1
+        self.fface = fface.copy()  # 2
+        self.rface = rface.copy()  # 3
+        self.bface = bface.copy()  # 4
+        self.dface = dface.copy()  # 5
+        self.cu = [uface.copy(), lface.copy(), fface.copy(), rface.copy(), bface.copy(), dface.copy()]
+        self.prev = self.cu.copy()
         self.edges = {
             'ub':[self.uface[1],self.bface[1]],
             'ul':[self.uface[3],self.lface[1]],
@@ -48,6 +50,11 @@ class cube:
                    ['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b9'],
                    ['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9']]
         
+
+    def checkchanges(self):
+        if self.prev != self.cu:
+            self.prev = self.cu.copy()
+            return True
 
     def updatedata(self):
         self.edges = {

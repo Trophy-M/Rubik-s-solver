@@ -1,5 +1,5 @@
 from varstore import *
-from interface import displaycube
+#from interface import displaycube
 
 def rotate(arr):
     arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6], arr[7], arr[8] = arr[6], arr[3], arr[0], arr[7], arr[4], \
@@ -94,7 +94,10 @@ def turnB(Rubikcube):
     Rubikcube.updatedata()
 
 def rotcube(Rubikcube, axis):
+    solution = open('solution.txt','a')
     axis = axis.lower()
+    solution.write(axis+'\n')
+    solution.close()
     tempu,templ,tempf,tempr,tempb,tempd = Rubikcube.cu[0], Rubikcube.cu[1], Rubikcube.cu[2], Rubikcube.cu[3], Rubikcube.cu[4], Rubikcube.cu[5]
     match axis:
         case 'x':
@@ -115,14 +118,16 @@ def rotcube(Rubikcube, axis):
             rotate(Rubikcube.cu[3])
             rotate(Rubikcube.cu[5])
             for i in range(0,3):rotate(Rubikcube.cu[4])
-    displaycube(Rubikcube, 0.1)
+    #displaycube(Rubikcube, 0.1)
+    
                
 
 def maketurns(tempcube, theturn):
+    solution = open('solution.txt','a')
     tempcube.updatedata()
     for turn in theturn:
-        displaycube(tempcube, 0.1)
-        turn  = turn.upper()
+        #displaycube(tempcube, 0.1)
+        solution.write(turn+ '\n')
         match turn:
             case 'R':
                 turnR(tempcube)
@@ -160,6 +165,7 @@ def maketurns(tempcube, theturn):
                 for x in range(0,2):turnF(tempcube)
             case 'B2':
                 for x in range(0,2):turnB(tempcube)
+    solution.close()
 
 
 #count the number of specific facelets color in face

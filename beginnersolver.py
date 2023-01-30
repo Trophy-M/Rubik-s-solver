@@ -83,7 +83,7 @@ class beginnersolver(cube):
       upedgesmap[facelet] = self.getfaceletpos(facelet)
     while not (self.cu[5][1][0] == self.cu[5][3][0] == self.cu[5][5][0] == self.cu[5][7][0]):
       for keys in upedgesfacelet:
-        print(keys, self.findlayer(keys),self.getfaceletpos(keys))
+        #print(keys, self.findlayer(keys),self.getfaceletpos(keys))
         if self.findlayer(keys) == 1:
           if keys in self.cu[0]:
             while self.getfaceletpos(keys) != 'u8':
