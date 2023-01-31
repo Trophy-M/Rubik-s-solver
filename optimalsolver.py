@@ -1,68 +1,43 @@
-'''from cube import *
-from transformations import *
-from varstore import *
-import numpy as np
-import itertools
+#Only for 2x2 as search space for 3x3 is too large. 
 
-class optimalsolver(cube):
-    def __init__(self,uface, lface, fface, rface, bface, dface):
-        super().__init__(uface, lface, fface, rface, bface, dface)
-
-#Use EO detection for heuristic
-    def edgescore(self,tempcube):
-        #use a matrix to represent distance
-        edgescore = 0
-        tempcube.updatedata()
-        faces = ['u','l','f','r','b','d']
-        for keys in solvededges:
-            #if facelet color is L or R then add one to score
-            if tempcube.cu[faces.index(solvededges[keys][0][0])][int(solvededges[keys][0][1])-1][0] == tempcube.cu[1][4][0] or tempcube.cu[faces.index(solvededges[keys][0][0])]\
-            [int(solvededges[keys][0][1])-1][0] == tempcube.cu[3][4][0]:
-                edgescore += 1
-            #otherwise if facelet color is F or B, check if its corresponding edge facelet is U or D, if yes, then add one to score
-            elif tempcube.cu[faces.index(solvededges[keys][0][0])][int(solvededges[keys][0][1])-1][0] == tempcube.cu[2][4][0] or tempcube.cu[faces.index(solvededges[keys][0][0])]\
-            [int(solvededges[keys][0][1])-1][0] == tempcube.cu[4][4][0]:
-                if tempcube.cu[faces.index(solvededges[keys][1][0])][int(solvededges[keys][1][1])-1][0] == tempcube.cu[0][4][0] or tempcube.cu[faces.index(solvededges[keys][1][0])]\
-                [int(solvededges[keys][1][1])-1][0] == tempcube.cu[5][4][0]:
-                    edgescore += 1
-        return edgescore
-    def hscore(self, cube):
-        edgescore = 0
-        cornerscore = 0
-        for keys in cube.edges:
-            permedges = list(itertools.permutations(cube.edges[keys]))
-            if tuple(solvededges[keys]) not in permedges:
-                edgescore += 1
-        for keys in cube.corners:
-            permcorners = list(itertools.permutations(cube.corners[keys]))
-            #print('corner: ', set(solvedcorners[keys]),'perm: ',permcorners)
-            if tuple(solvedcorners[keys]) not in permcorners:
-                cornerscore += 1
-        #hscore = edgescore + cornerscore
-        return [edgescore,cornerscore]
+class Rubikgraph:
+    def __init__(self, startnode, goalnode):
+        #data structure is [[a,b,c,d],[a,b,c,d],[a,b,c,d],[a,b,c,d],[a,b,c,d],[a,b,c,d]]; (u,l,f,r,b,d)
+        self.startnode = startnode
+        self.goalnode = goalnode
     
-    #use ida search to find a state in which all corners are solved
-    def firststatesearch(self):
-        pass
+    def rot2x2(arr):
+        arr[0], arr[1], arr[2], arr[3] = arr[2], arr[0], arr[1], arr[3]
+        return arr
+    
+    def transformation(self, cubestate, moves):
+        for transform in moves:
+            transform = transform.lower()
+            if transform == 'u':
+                self.rot2x2(cubestate[0])
+                tempf = cubestate[2][0], cubestate[2][1]
+                templ = cubestate[1][0], cubestate[1][1]
+                tempr = cubestate[3][0], cubestate[3][1]
+                tempb = cubestate[4][0], cubestate[4][1]
 
-kcube = optimalsolver(['u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'u7', 'u8', 'u 9']
-,['l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9']
-,['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9']
-,['r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9']
-,['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b9']
-,['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9'])
-kcube.shufflecube()
-kcube.firststatesearch()
+                templ, tempb,tempf, tempr = tempf,templ,tempr,tempb
+                cubestate[2][0], cubestate[2][1] = tempf
+                cubestate[1][0], cubestate[1][1] = templ
+                cubestate[3][0], cubestate[3][1] = tempr
+                cubestate[4][0], cubestate[4][1] = tempb
+            elif transform == 'l':
+                self.rot2x2(cubestate[1])
+                tempf = cubestate[2][0], cubestate[2][2]
+                tempd = cubestate[5][0], cubestate[5][3] #
+                tempu = cubestate[0][0], cubestate[0][3]
+                tempb = cubestate[4][2], cubestate[4][5]
+
+                tempd,tempb,tempf,tempu = tempf,tempd,tempu,tempb
+                cubestate[2][0], cubestate[2][3], cubestate[2][6] = tempf
+                cubestate[5][0], cubestate[5][3], cubestate[5][6] = tempd
+                cubestate[0][6], cubestate[0][3], cubestate[0][0] = tempu
+                cubestate[4][8], cubestate[4][5], cubestate[4][2] = tempb
+                
 
 
 
-
-
-
-
-
-
-
-
-        
-'''

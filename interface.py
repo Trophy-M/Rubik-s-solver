@@ -1,7 +1,7 @@
 import pygame
 import time
 from varstore import *
-from transformations import *
+import transformations
 from cube import cube
 from beginnersolver import beginnersolver
 from pygame.locals import *
@@ -82,14 +82,20 @@ def placecube(Rubikcube, pos,window,my_font):
             text_surface = my_font.render(str(int(jtems[1])), False, (0, 0, 0))
             window.blit(text_surface, (x+10,y))
             pygame.display.update()
-def displaycube(Rubikcube, delay,window):
+def solvingcubedisplay(Rubikcube, delay):
     Rubikcube.updatedata()
     gridcoordinates = [[350,400,450,350,400,450,350,400,450],[50,50,50,100,100,100,150,150,150]]
-    my_font = pygame.font.SysFont('Arial', 30)
-    window = pygame.display.set_mode((1000,800))
+    my_font = pygame.font.SysFont('Open Sans', 30)
+    window = pygame.display.set_mode((1280,720))
     window.fill(white)
+    displaytext('Solving...', (450,50),'Open Sans',60,window,(0,0,0))
     time.sleep(delay)
     placecube(Rubikcube.cu,gridcoordinates, window, my_font)
+
+#tells user the instructions
+def instructions():
+    pass
+
 
 #In this mode, players can freely interact with the cube 
 def freeplay():
@@ -117,17 +123,17 @@ def freeplay():
                 run = False
             if event.type == pygame.KEYDOWN:
                 if event.key == K_r:
-                    turnR(Rubikcube)
+                    transformations.turnR(Rubikcube)
                 if event.key == K_u:
-                    turnU(Rubikcube)
+                    transformations.turnU(Rubikcube)
                 if event.key == K_d:
-                    turnD(Rubikcube)
+                    transformations.turnD(Rubikcube)
                 if event.key == K_b:
-                    turnB(Rubikcube)
+                    transformations.turnB(Rubikcube)
                 if event.key == K_l:
-                    turnL(Rubikcube)
+                    transformations.turnL(Rubikcube)
                 if event.key == K_f:
-                    turnF(Rubikcube)
+                    transformations.turnF(Rubikcube)
                 if event.key == K_s:
                     Rubikcube.solvecube()
                 if event.key == K_0:
@@ -135,11 +141,14 @@ def freeplay():
                 if event.key == K_1:
                     Rubikcube.cubereset()
                 if event.key == K_x:
-                    rotcube(Rubikcube,'x')
+                    transformations.rotcube(Rubikcube,'x')
                 if event.key == K_y:
-                    rotcube(Rubikcube,'y')
+                    transformations.rotcube(Rubikcube,'y')
                 if event.key == K_z:
-                    rotcube(Rubikcube,'z')
+                    transformations.rotcube(Rubikcube,'z')
+                if event.key == K_LSHIFT or event == K_RSHIFT:
+                    instructions()
+
 
 
 def menu():

@@ -1,7 +1,7 @@
 from cube import *
 from transformations import *
 from varstore import *
-#from interface import *
+import interface
 
 
 #check if top layer forms a cross
@@ -306,7 +306,6 @@ class beginnersolver(cube):
         faceletmap[facelet] = self.getfaceletpos(facelet)
       for keys in faceletmap:
         faceletmap[keys] = self.getfaceletpos(keys)
-        #displaycube(self,0.5)
         #skip if position is an up edge
         if faceletmap[keys][0] == self.cu[0][4][0] or faceletmap[keys][0] == self.cu[5][4][0]:
           continue
@@ -315,7 +314,6 @@ class beginnersolver(cube):
             pass
           elif faceletmap[keys] != keys:
             while faceletmap[keys][0] != 'f':
-              #displaycube(self,0.5)
               rotcube(self,'y')
               faceletmap[keys] = self.getfaceletpos(keys)
             #to right
@@ -333,11 +331,9 @@ class beginnersolver(cube):
             self.secondlayeredgeinsert()
         else:
           while faceletmap[keys][0] != 'f':
-            #displaycube(self,0.5)
-            rotcube(self,'Y')
+            rotcube(self,'y')
             faceletmap[keys] = self.getfaceletpos(keys)
           while self.cu[2][1][0] != self.cu[2][4][0]:
-            #displaycube(self,0.5)
             maketurns(self,['UP'])
             rotcube(self,'y')
           self.secondlayeredgeinsert()
@@ -393,4 +389,5 @@ class beginnersolver(cube):
     print('Second Layer solved')
     self.lastlayercross()
     print('Cube solved')
+    interface.freeplay()
 
