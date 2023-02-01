@@ -55,6 +55,8 @@ class cube:
         if self.prev != self.cu:
             self.prev = self.cu.copy()
             return True
+        else:
+            return False
 
     def updatedata(self):
         self.edges = {
