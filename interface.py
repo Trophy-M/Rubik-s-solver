@@ -5,6 +5,8 @@ import transformations
 from cube import cube
 from beginnersolver import beginnersolver
 from pygame.locals import *
+import pocketcube
+
 
 class Button():
     #x and y defines the position and sf defines the image scale factor
@@ -98,7 +100,8 @@ def instructions():
 
 
 #In this mode, players can freely interact with the cube 
-def freeplay():
+def Rubikinteract():
+    clock = pygame.time.Clock()
     run = True
     window = pygame.display.set_mode((1280,720))
     window.fill(white)
@@ -114,10 +117,11 @@ def freeplay():
     ,['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b9']
     ,['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9'])
     placecube(Rubikcube.cu,[[350,400,450,350,400,450,350,400,450],[50,50,50,100,100,100,150,150,150]], window, cube_font)
-    while run == True:
-        if Rubikcube.checkchanges:
-            time.sleep(0.1)
-            placecube(Rubikcube.cu,[[350,400,450,350,400,450,350,400,450],[50,50,50,100,100,100,150,150,150]], window, cube_font)
+    while run:
+        '''if Rubikcube.checkchanges:
+            placecube(Rubikcube.cu,[[350,400,450,350,400,450,350,400,450],[50,50,50,100,100,100,150,150,150]], window, cube_font)'''
+        clock.tick(40)
+        placecube(Rubikcube.cu,[[350,400,450,350,400,450,350,400,450],[50,50,50,100,100,100,150,150,150]], window, cube_font)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -149,7 +153,55 @@ def freeplay():
                 if event.key == K_LSHIFT or event == K_RSHIFT:
                     instructions()
 
-
+def Pocketinteract():
+    clock = pygame.time.Clock()
+    run = True
+    window = pygame.display.set_mode((1280,720))
+    window.fill(white)
+    displaytext('Freeplay mode', (450,50),'Open Sans',60,window,(0,0,0))
+    cube_font = pygame.font.SysFont('Open Sans', 30)
+    pygame.display.flip()
+    pktcube = pocketcube.pocketcube([['u1', 'u2', 'u3', 'u4']
+    ,['l1', 'l2', 'l3', 'l4']
+    ,['f1', 'f2', 'f3', 'f4']
+    ,['r1', 'r2', 'r3', 'r4']
+    ,['b1', 'b2', 'b3', 'b4']
+    ,['d1', 'd2', 'd3', 'd4']])
+    pktcube.placepocket([[350,400,350,400],[50,50,100,100]],window,cube_font)
+    while run:
+        clock.tick(40)
+        pktcube.placepocket([[350,400,350,400],[50,50,100,100]],window,cube_font)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == K_r:
+                    pktcube.transformation('r')
+                if event.key == K_u:
+                    pktcube.transformation('u')
+                if event.key == K_d:
+                    pktcube.transformation('d')
+                if event.key == K_b:
+                    pktcube.transformation('b')
+                if event.key == K_l:
+                    pktcube.transformation('l')
+                if event.key == K_f:
+                    pktcube.transformation('f')
+                if event.key == K_s:
+                    pass
+                if event.key == K_0:
+                    pktcube.resetcube()
+                if event.key == K_1:
+                    pass
+                if event.key == K_x:
+                    pass
+                if event.key == K_y:
+                    pass
+                if event.key == K_z:
+                    pass
+                if event.key == K_LSHIFT or event == K_RSHIFT:
+                    instructions()
+        
 
 def menu():
     pygame.font.init()
@@ -161,12 +213,16 @@ def menu():
     run = True
     pygame.display.flip()
     quitimg = pygame.image.load('images/button_quit.png').convert_alpha()
-    freeplaybtn = Button(520,300,(pygame.image.load('images/button_freeplay.png').convert_alpha()),1)
-    quitbtn = Button(545,450,(pygame.image.load('images/button_quit.png').convert_alpha()),1)
+    pocketbtn = Button(540,300,(pygame.image.load('images/pocketbutton.png').convert_alpha()),1)
+    rubikbtn = Button(540,400,(pygame.image.load('images/rubikbutton.png').convert_alpha()),1)
+    quitbtn = Button(545,500,(pygame.image.load('images/button_quit.png').convert_alpha()),1)
     while run == True:
-        if freeplaybtn.initialise(window):
+        if rubikbtn.initialise(window):
             run = False
-            freeplay()
+            Rubikinteract()
+        if pocketbtn.initialise(window):
+            run = False
+            Pocketinteract()
         if quitbtn.initialise(window):
             run = False
 

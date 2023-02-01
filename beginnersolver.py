@@ -389,5 +389,5 @@ class beginnersolver(cube):
     print('Second Layer solved')
     self.lastlayercross()
     print('Cube solved')
-    interface.freeplay()
+    interface.Rubikinteract()
 
