@@ -182,6 +182,24 @@ def checkanyfacelets(face, facelets):
     if any(x in face for x in facelets):
         containAny = True
     return containAny
+
+#takes a list of move and inverse it (inverses transformation i.e. RP U turns in to UP R)
+def inversemove(moves):
+    moves.reverse()
+    inversedmove = []
+    for items in moves:
+        items = items.lower()
+        #if item is one letter then it is a single turn
+        if len(items) == 1:
+            inversedmove.append(items + 'p')
+        #if item is two letter and ends with P then it is a triple turn
+        elif len(items) == 2 and items[1] == 'p':
+            inversedmove.append(items[0])
+        else:
+            inversedmove.append(items)
+    return inversedmove
+
+
 #find edges with the face inputted
 '''def findedgeswithface(Rubikcube, face):
     for key in self.edges:
