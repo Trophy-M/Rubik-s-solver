@@ -1,5 +1,6 @@
 #2x2 cube called pocket cube
 import pygame
+import random
 
 class pocketcube:
     def __init__(self, cu):
@@ -17,6 +18,9 @@ class pocketcube:
         ,['r1', 'r2', 'r3', 'r4']
         ,['b1', 'b2', 'b3', 'b4']
         ,['d1', 'd2', 'd3', 'd4']].copy()
+    
+    def returnstate(self):
+        return self.cu
     
     def transformation(self, moves):
         for transform in moves:
@@ -167,6 +171,15 @@ class pocketcube:
                 text_surface = my_font.render(str(int(jtems[1])), False, (0, 0, 0))
                 window.blit(text_surface, (x+10,y))
                 pygame.display.update()
+
+    def shufflecube(self):
+        times = random.randint(5, 10) 
+        randommoves = []
+        for i in range(0, times):
+            randommoves.append(random.choice(['u','l','f','r','b','d','u2','l2','f2','r2','b2','d2','up','lp','fp','rp','bp','dp']))
+        print('Moves applied', randommoves)
+        self.transformation(randommoves)
+
 
 
 
