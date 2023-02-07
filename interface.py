@@ -7,6 +7,7 @@ from beginnersolver import beginnersolver
 from pygame.locals import *
 import pocketcube
 import pocketcubesolver
+import copy
 
 
 class Button():
@@ -189,8 +190,12 @@ def Pocketinteract():
                 if event.key == K_f:
                     pktcube.transformation('f')
                 if event.key == K_s:
-                    spktcube = pocketcubesolver.bfsPocketcube(pktcube.returnstate())
-                    spktcube.bibfssearch()
+                    spktcube = pocketcubesolver.bfsPocketcube(copy.deepcopy(pktcube.returnstate()))
+                    solution = spktcube.UFRsolve()
+                    spktcube.transformation(solution)
+                    invsol = spktcube.inversemove(solution.copy())
+                    solution += spktcube.bibfssearch()
+                    displaytext(('Solution is '+ str(solution)), (100,100),'Open Sans',20,window,(0,0,0))
                 if event.key == K_0:
                     pktcube.shufflecube()
                 if event.key == K_1:

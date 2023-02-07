@@ -21,6 +21,62 @@ class bfsPocketcube(pocketcube.pocketcube):
             else:
                 inversedmove.append(items)
         return inversedmove
+    
+    #search for a solved state of corner DFR using bfs
+    def UFRsolve(self):
+        initialUFR = copy.deepcopy([self.cu[0][3],self.cu[2][1],self.cu[3][0]])
+        goalUFR = {'a',str(['u4','f2','r1'])}
+        moves = [['u'],['l'],['f'],['r'],['b'],['d'],['u2'],['l2'],['f2'],['r2'],['b2'],['d2'],['up'],['lp'],['fp'],['rp'],['bp'],['dp']]
+        #moves = [['l'],['b'],['d'],['l2'],['b2'],['d2'],['lp'],['bp'],['dp']]
+        queue = []
+        depthlimit = 8
+        n=0
+        visited, searchtree,searchstate = {},{},{'b'}
+        startnode = self.cu
+        search = True
+        queue = copy.deepcopy(moves)
+        while search:
+            path = queue.pop(0)
+            if len(path) > depthlimit:
+                search = False
+                print('Depth limit reached')
+            for items in moves:
+                #if turns are repeated (e.g. r r2) they are redundant
+                if path[len(path)-1][0] != items[0][0] and len(path+items) <= depthlimit:
+                    queue.append(path+items)
+
+            tempcube = pocketcube.pocketcube(copy.deepcopy(startnode))
+            tempcube.transformation(path)
+
+            currentnode = tempcube.returnstate()
+            if tempcube in visited:
+                continue
+            else:
+                visited[str(currentnode)] = n
+                searchtree[str(currentnode)] = path
+                searchstate.add(str([currentnode[0][3],currentnode[2][1],currentnode[3][0]]))
+            
+            print(str([currentnode[0][3],currentnode[2][1],currentnode[3][0]]))
+            print(goalUFR)
+            if bool(searchstate&goalUFR) == True:
+                search = False
+                solution = searchtree[str(currentnode)]
+                solution = list(solution)
+            n+=1
+        
+        print(solution)
+        return solution
+
+            
+            
+
+
+
+
+
+
+
+
 
     #search from current state to goal node using bfs and other way round
     def bibfssearch(self):
@@ -36,7 +92,8 @@ class bfsPocketcube(pocketcube.pocketcube):
         ,['b1', 'b2', 'b3', 'b4']
         ,['d1', 'd2', 'd3', 'd4']])
         #moves = [['u'],['l'],['f'],['r'],['b'],['d'],['up'],['lp'],['fp'],['rp'],['bp'],['dp']]
-        moves = [['u'],['l'],['f'],['r'],['b'],['d'],['u2'],['l2'],['f2'],['r2'],['b2'],['d2'],['up'],['lp'],['fp'],['rp'],['bp'],['dp']]
+        moves = [['l'],['b'],['d'],['l2'],['b2'],['d2'],['lp'],['bp'],['dp']]
+        #moves = [['u'],['l'],['f'],['r'],['b'],['d'],['u2'],['l2'],['f2'],['r2'],['b2'],['d2'],['up'],['lp'],['fp'],['rp'],['bp'],['dp']]
         queue = copy.deepcopy(moves)
         search = True
         searchtreestart, searchtreegoal = {}, {}
@@ -45,6 +102,8 @@ class bfsPocketcube(pocketcube.pocketcube):
         #n counts number of iterations
         n = 0
         start = time.time()
+        if startnode == goalnode:
+            search = False
         while search:
             path = queue.pop(0)
             if len(path) > depthlimit:
@@ -93,12 +152,14 @@ class bfsPocketcube(pocketcube.pocketcube):
             n += 1
             if len(path) != prevdepth:
                 pass
-            #print('Current path: ', path)
+            print('Current path bi: ', path)
             prevdepth = len(path)
             #print(searchstatestart,searchstategoal)
-
-        print('finished', solution)    
-        #return solution
+   
+        if n == 0:
+            pass
+        else:
+            return solution
 
 '''temppocket = bfsPocketcube([['u1', 'u2', 'u3', 'u4']
 ,['l1', 'l2', 'l3', 'l4']
@@ -106,7 +167,9 @@ class bfsPocketcube(pocketcube.pocketcube):
 ,['r1', 'r2', 'r3', 'r4']
 ,['b1', 'b2', 'b3', 'b4']
 ,['d1', 'd2', 'd3', 'd4']])
-temppocket.transformation(['R','U2', "L", "BP"])
+temppocket.transformation(['R','UP','D2','F',"B2"])
+firstsol = temppocket.UFRsolve()
+temppocket.transformation(firstsol)
 temppocket.bibfssearch()'''
 
        

@@ -11,6 +11,9 @@ class pocketcube:
         arr[1], arr[3], arr[0], arr[2] = arr[0], arr[1], arr[2], arr[3]
         return arr
     
+    def returnfacelet(self, face, position):
+        return self.cu[face][position]
+
     def resetcube(self):
         self.cu = [['u1', 'u2', 'u3', 'u4']
         ,['l1', 'l2', 'l3', 'l4']
@@ -173,7 +176,8 @@ class pocketcube:
                 pygame.display.update()
 
     def shufflecube(self):
-        times = random.randint(5, 10) 
+        times = random.randint(25, 50)
+        times = 100 
         randommoves = []
         for i in range(0, times):
             randommoves.append(random.choice(['u','l','f','r','b','d','u2','l2','f2','r2','b2','d2','up','lp','fp','rp','bp','dp']))
