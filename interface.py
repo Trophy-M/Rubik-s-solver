@@ -2,8 +2,8 @@ import pygame
 import time
 from varstore import *
 import transformations
-from cube import cube
-from beginnersolver import beginnersolver
+import cube
+import beginnersolver
 from pygame.locals import *
 import pocketcube
 import pocketcubesolver
@@ -96,11 +96,6 @@ def solvingcubedisplay(Rubikcube, delay):
     time.sleep(delay)
     placecube(Rubikcube.cu,gridcoordinates, window, my_font)
 
-#tells user the instructions
-def instructions():
-    pass
-
-
 #In this mode, players can freely interact with the cube 
 def Rubikinteract():
     clock = pygame.time.Clock()
@@ -112,34 +107,37 @@ def Rubikinteract():
     pygame.display.flip()
     quitbtn = Button(300,450,(pygame.image.load('images/button_quit.png').convert_alpha()),1)
     solvebtn = Button(600,450,(pygame.image.load('images/button_solve.png').convert_alpha()),1)
-    Rubikcube = beginnersolver(['u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'u7', 'u8', 'u9']
+    Rubikcube = beginnersolver.beginnersolver([['u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'u7', 'u8', 'u9']
     ,['l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9']
     ,['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9']
     ,['r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9']
     ,['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b9']
-    ,['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9'])
+    ,['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9']])
     placecube(Rubikcube.cu,[[350,400,450,350,400,450,350,400,450],[50,50,50,100,100,100,150,150,150]], window, cube_font)
+    returnbtn = Button(500,620,(pygame.image.load('images/button_return.png').convert_alpha()),1)
     while run:
-        '''if Rubikcube.checkchanges:
-            placecube(Rubikcube.cu,[[350,400,450,350,400,450,350,400,450],[50,50,50,100,100,100,150,150,150]], window, cube_font)'''
+        if returnbtn.initialise(window):
+            run = False
+            returnmenubool = True
         clock.tick(40)
         placecube(Rubikcube.cu,[[350,400,450,350,400,450,350,400,450],[50,50,50,100,100,100,150,150,150]], window, cube_font)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+                menu()
             if event.type == pygame.KEYDOWN:
                 if event.key == K_r:
-                    transformations.turnR(Rubikcube)
+                    Rubikcube.turnR()
                 if event.key == K_u:
-                    transformations.turnU(Rubikcube)
+                    Rubikcube.turnU()
                 if event.key == K_d:
-                    transformations.turnD(Rubikcube)
+                    Rubikcube.turnD()
                 if event.key == K_b:
-                    transformations.turnB(Rubikcube)
+                    Rubikcube.turnB()
                 if event.key == K_l:
-                    transformations.turnL(Rubikcube)
+                    Rubikcube.turnL()
                 if event.key == K_f:
-                    transformations.turnF(Rubikcube)
+                    Rubikcube.turnF()
                 if event.key == K_s:
                     Rubikcube.solvecube()
                 if event.key == K_0:
@@ -147,13 +145,38 @@ def Rubikinteract():
                 if event.key == K_1:
                     Rubikcube.cubereset()
                 if event.key == K_x:
-                    transformations.rotcube(Rubikcube,'x')
+                    Rubikcube.rotcube('x')
                 if event.key == K_y:
-                    transformations.rotcube(Rubikcube,'y')
+                    Rubikcube.rotcube('y')
                 if event.key == K_z:
-                    transformations.rotcube(Rubikcube,'z')
-                if event.key == K_LSHIFT or event == K_RSHIFT:
-                    instructions()
+                    Rubikcube.rotcube('z')
+
+    if returnmenubool == True:
+        menu()
+def instructionscreen():
+    clock = pygame.time.Clock()
+    run = True
+    window = pygame.display.set_mode((1280,720))
+    window.fill(white)
+    displaytext('Instructions', (450,50),'Open Sans',60,window,(255,0,0))
+    displaytext('Press U/L/F/R/D/B to turn U/L/F/R/D/B faces', (450,100),'Open Sans',30,window,(0,0,0))
+    displaytext('Press S to solve the cube', (450,150),'Open Sans',30,window,(0,0,0))
+    displaytext('Press 0 to scramble the cube', (450,200),'Open Sans',30,window,(0,0,0))
+    displaytext('Press 1 to reset the cube', (450,250),'Open Sans',30,window,(0,0,0))
+    displaytext('Press enter to continue', (450,300),'Open Sans',30,window,(0,0,100))
+    rubiklogo = pygame.transform.scale((pygame.image.load('images/rubik_logo.png').convert_alpha()), (int(1200*0.25),int(1200*0.25)))
+    window.blit(rubiklogo, (450, 350))
+    pygame.display.flip() 
+    while run:
+        clock.tick(40)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == K_RETURN:
+                    run = False
+
+        
 
 def Pocketinteract():
     clock = pygame.time.Clock()
@@ -170,12 +193,19 @@ def Pocketinteract():
     ,['b1', 'b2', 'b3', 'b4']
     ,['d1', 'd2', 'd3', 'd4']])
     pktcube.placepocket([[350,400,350,400],[50,50,100,100]],window,cube_font)
+    returnbtn = Button(500,550,(pygame.image.load('images/button_return.png').convert_alpha()),1)
     while run:
+        if pktcube.isSolved():
+            pygame.draw.rect(window, (255,255,255),pygame.Rect(50,95,1000,50))
+        if returnbtn.initialise(window):
+            run = False
+            menu()
         clock.tick(40)
         pktcube.placepocket([[350,400,350,400],[50,50,100,100]],window,cube_font)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+                returnmenubool = True
             if event.type == pygame.KEYDOWN:
                 if event.key == K_r:
                     pktcube.transformation('r')
@@ -206,8 +236,6 @@ def Pocketinteract():
                     pass
                 if event.key == K_z:
                     pass
-                if event.key == K_LSHIFT or event == K_RSHIFT:
-                    instructions()
         
 
 def menu():
@@ -219,22 +247,24 @@ def menu():
     displaytext('Rubik Cube Solver', (270,100),'Impact',100,window,(255,255,255))
     run = True
     pygame.display.flip()
-    quitimg = pygame.image.load('images/button_quit.png').convert_alpha()
     pocketbtn = Button(540,300,(pygame.image.load('images/pocketbutton.png').convert_alpha()),1)
     rubikbtn = Button(540,400,(pygame.image.load('images/rubikbutton.png').convert_alpha()),1)
     quitbtn = Button(545,500,(pygame.image.load('images/button_quit.png').convert_alpha()),1)
     while run == True:
         if rubikbtn.initialise(window):
             run = False
+            instructionscreen()
             Rubikinteract()
         if pocketbtn.initialise(window):
             run = False
+            instructionscreen()
             Pocketinteract()
         if quitbtn.initialise(window):
-            run = False
+            exit()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
             
         pygame.display.update()
+    

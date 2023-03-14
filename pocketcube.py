@@ -1,11 +1,12 @@
 #2x2 cube called pocket cube
 import pygame
 import random
+import copy
 
 class pocketcube:
     def __init__(self, cu):
         #data structure is [[a,b,c,d],[a,b,c,d],[a,b,c,d],[a,b,c,d],[a,b,c,d],[a,b,c,d]]; (u,l,f,r,b,d)
-        self.cu = cu.copy()
+        self.cu = copy.deepcopy(cu)
     
     def rotpocket(self,arr):
         arr[1], arr[3], arr[0], arr[2] = arr[0], arr[1], arr[2], arr[3]
@@ -21,6 +22,18 @@ class pocketcube:
         ,['r1', 'r2', 'r3', 'r4']
         ,['b1', 'b2', 'b3', 'b4']
         ,['d1', 'd2', 'd3', 'd4']].copy()
+    
+    def isSolved(self):
+        if self.cu == [['u1', 'u2', 'u3', 'u4']
+        ,['l1', 'l2', 'l3', 'l4']
+        ,['f1', 'f2', 'f3', 'f4']
+        ,['r1', 'r2', 'r3', 'r4']
+        ,['b1', 'b2', 'b3', 'b4']
+        ,['d1', 'd2', 'd3', 'd4']]:
+            return True
+        else:
+            return False
+            
     
     def returnstate(self):
         return self.cu
@@ -176,8 +189,7 @@ class pocketcube:
                 pygame.display.update()
 
     def shufflecube(self):
-        times = random.randint(25, 50)
-        times = 100 
+        times = random.randint(50, 100)
         randommoves = []
         for i in range(0, times):
             randommoves.append(random.choice(['u','l','f','r','b','d','u2','l2','f2','r2','b2','d2','up','lp','fp','rp','bp','dp']))

@@ -1,23 +1,16 @@
 import random
 import time
-from transformations import *
+from varstore import *
 
-
-# change coordinate in arr2 in that position to be arr1 in the other position
-# rotates a 3x3 matrix CW
-
-
-
-# Stores data as an array with multiple subarrays. Each subarrays represent a face on the cube.
 class cube:
-    def __init__(self, uface, lface, fface, rface, bface, dface):
-        self.uface = uface.copy()  # 0
-        self.lface = lface.copy()  # 1
-        self.fface = fface.copy()  # 2
-        self.rface = rface.copy()  # 3
-        self.bface = bface.copy()  # 4
-        self.dface = dface.copy()  # 5
-        self.cu = [uface.copy(), lface.copy(), fface.copy(), rface.copy(), bface.copy(), dface.copy()]
+    def __init__(self, cu):
+        self.cu = cu
+        self.uface = self.cu[0]
+        self.lface = self.cu[1]
+        self.fface = self.cu[2]
+        self.rface = self.cu[3]
+        self.bface = self.cu[4]
+        self.dface = self.cu[5]
         self.prev = self.cu.copy()
         self.edges = {
             'ub':[self.uface[1],self.bface[1]],
@@ -49,6 +42,8 @@ class cube:
                    ['r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9'], \
                    ['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b9'],
                    ['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9']]
+        self.cubelog = open('rubiklog.txt','w')
+        self.cubelog.close()
         
 
     def checkchanges(self):
@@ -91,19 +86,20 @@ class cube:
         self.dface = self.cu[5]  # 5
 
     # prints cube in the console
-    def displaycube(self):
-        for i in range(6): print(self.cu[i])
+    def returnstate(self):
+        return self.cu
 
     # do random moves on the cube randomly totalling from 50-100
     def shufflecube(self):
         times = random.randint(50, 100)
-        turns = [turnB, turnF, turnD, turnL, turnR, turnU]
+        turns = [self.turnB, self.turnF, self.turnD, self.turnL, self.turnR, self.turnU]
         for i in range(times):
-            random.choice(turns)(self)
+            random.choice(turns)
 
     # import other oreintation of cubes
     def rubikchange(self, importcube):
         self.cu = importcube
+    
 
     def cubereset(self):
         self.cu = [['u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'u7', 'u8', 'u9'],
@@ -171,6 +167,169 @@ class cube:
                 layer = 2
         return layer
     
+    def rotate(self,arr):
+        arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6], arr[7], arr[8] = arr[6], arr[3], arr[0], arr[7], arr[4], \
+                                                                                arr[1], arr[8], arr[5], arr[2]
+        return arr
+
+    def turnR(self):
+        self.rotate(self.cu[3])
+        tempf = self.cu[2][2], self.cu[2][5], self.cu[2][8]
+        tempd = self.cu[5][2], self.cu[5][5], self.cu[5][8]
+        tempu = self.cu[0][2], self.cu[0][5], self.cu[0][8]
+        tempb = self.cu[4][0], self.cu[4][3], self.cu[4][6]
+
+        tempu ,tempf, tempb, tempd = tempf,tempd,tempu,tempb
+        self.cu[2][2], self.cu[2][5], self.cu[2][8] = tempf
+        self.cu[5][8], self.cu[5][5], self.cu[5][2] = tempd
+        self.cu[0][2], self.cu[0][5], self.cu[0][8] = tempu
+        self.cu[4][6], self.cu[4][3], self.cu[4][0] = tempb
+        self.updatedata()
+
+    def turnL(self):
+        self.rotate(self.cu[1])
+        tempf = self.cu[2][0], self.cu[2][3], self.cu[2][6]
+        tempd = self.cu[5][0], self.cu[5][3], self.cu[5][6]
+        tempu = self.cu[0][0], self.cu[0][3], self.cu[0][6]
+        tempb = self.cu[4][2], self.cu[4][5], self.cu[4][8]
+
+        tempd,tempb,tempf,tempu = tempf,tempd,tempu,tempb
+        self.cu[2][0], self.cu[2][3], self.cu[2][6] = tempf
+        self.cu[5][0], self.cu[5][3], self.cu[5][6] = tempd
+        self.cu[0][6], self.cu[0][3], self.cu[0][0] = tempu
+        self.cu[4][8], self.cu[4][5], self.cu[4][2] = tempb
+        self.updatedata()
+
+    def turnU(self):
+        self.rotate(self.cu[0])
+        tempf = self.cu[2][0], self.cu[2][1], self.cu[2][2]
+        templ = self.cu[1][0], self.cu[1][1], self.cu[1][2]
+        tempr = self.cu[3][0], self.cu[3][1], self.cu[3][2]
+        tempb = self.cu[4][0], self.cu[4][1], self.cu[4][2]
+
+        templ, tempb,tempf, tempr = tempf,templ,tempr,tempb
+        self.cu[2][0], self.cu[2][1], self.cu[2][2] = tempf
+        self.cu[1][0], self.cu[1][1], self.cu[1][2] = templ
+        self.cu[3][0], self.cu[3][1], self.cu[3][2] = tempr
+        self.cu[4][0], self.cu[4][1], self.cu[4][2] = tempb
+        self.updatedata()
+        
+
+    def turnD(self):
+        self.rotate(self.cu[5])
+        tempf = self.cu[2][6], self.cu[2][7], self.cu[2][8]
+        templ = self.cu[1][6], self.cu[1][7], self.cu[1][8]
+        tempr = self.cu[3][6], self.cu[3][7], self.cu[3][8]
+        tempb = self.cu[4][6], self.cu[4][7], self.cu[4][8]
+
+        tempr,tempf,tempb,templ = tempf,templ,tempr,tempb
+        self.cu[2][6], self.cu[2][7], self.cu[2][8] = tempf
+        self.cu[1][6], self.cu[1][7], self.cu[1][8] = templ
+        self.cu[3][6], self.cu[3][7], self.cu[3][8] = tempr
+        self.cu[4][6], self.cu[4][7], self.cu[4][8] = tempb
+        self.updatedata()
+        
+
+    def turnF(self):
+        self.rotate(self.cu[2])
+        tempd = self.cu[5][0], self.cu[5][1], self.cu[5][2]
+        tempu = self.cu[0][6], self.cu[0][7], self.cu[0][8]
+        templ = self.cu[1][2], self.cu[1][5], self.cu[1][8]
+        tempr = self.cu[3][0], self.cu[3][3], self.cu[3][6]
+
+        templ, tempr,tempu,tempd = tempd,tempu,templ,tempr
+        self.cu[5][2], self.cu[5][1], self.cu[5][0] = tempd
+        self.cu[0][8], self.cu[0][7], self.cu[0][6] = tempu
+        self.cu[1][2], self.cu[1][5], self.cu[1][8] = templ
+        self.cu[3][0], self.cu[3][3], self.cu[3][6] = tempr
+        self.updatedata()
+        
+
+    def turnB(self):
+        self.rotate(self.cu[4])
+        tempd = self.cu[5][6], self.cu[5][7], self.cu[5][8]
+        tempu = self.cu[0][0], self.cu[0][1], self.cu[0][2]
+        templ = self.cu[1][0], self.cu[1][3], self.cu[1][6]
+        tempr = self.cu[3][2], self.cu[3][5], self.cu[3][8]
+
+        tempd,tempu,templ,tempr = templ,tempr,tempu,tempd
+        self.cu[5][6], self.cu[5][7], self.cu[5][8] = tempd
+        self.cu[0][0], self.cu[0][1], self.cu[0][2] = tempu
+        self.cu[1][6], self.cu[1][3], self.cu[1][0] = templ
+        self.cu[3][8], self.cu[3][5], self.cu[3][2] = tempr
+        self.updatedata()
+
+    def rotcube(self, axis):
+        with open('solution.txt','a') as s:
+            s.writelines(axis.lower() + '\n')
+        tempu,templ,tempf,tempr,tempb,tempd = self.cu[0], self.cu[1], self.cu[2], self.cu[3], self.cu[4], self.cu[5]
+        match axis:
+            case 'x':
+                self.cu[0], self.cu[1], self.cu[2], self.cu[3], self.cu[4], self.cu[5] = tempf,templ,tempd,tempr,tempu,tempb
+                for i in range(0,2): self.rotate(self.cu[4])
+                for i in range(0,2): self.rotate(self.cu[5])
+                for i in range(0,3): self.rotate(self.cu[1])
+                self.rotate(self.rface)
+            case 'y':
+                self.cu[0], self.cu[1], self.cu[2], self.cu[3], self.cu[4], self.cu[5] = tempu, tempf, tempr, tempb, templ, tempd
+                for i in range(0,3): self.rotate(self.cu[5])
+                self.rotate(self.cu[0])
+            case 'z':
+                self.cu[0], self.cu[1], self.cu[2], self.cu[3], self.cu[4], self.cu[5] = templ, tempd, tempf, tempu, tempb, tempr
+                self.rotate(self.cu[0])
+                self.rotate(self.cu[1])
+                self.rotate(self.cu[2])
+                self.rotate(self.cu[3])
+                self.rotate(self.cu[5])
+                for i in range(0,3):self.rotate(self.cu[4])
+        #interface.solvingcubedisplay(self, 0.1)
+        
+                
+
+    def maketurns(self, theturn):
+        self.updatedata()
+        for turn in theturn:
+            with open('solution.txt','a') as s:
+                s.writelines(turn + '\n')
+            #interface.solvingcubedisplay(self, 0.1)
+            print(turn + '\n')
+            match turn:
+                case 'R':
+                    self.turnR()
+                case 'L':
+                    self.turnL()
+                case 'U':
+                    self.turnU()
+                case 'D':
+                    self.turnD()
+                case 'F':
+                    self.turnF()
+                case 'B':
+                    self.turnB()
+                case 'RP':
+                    for x in range(0,3): self.turnR()
+                case 'LP':
+                    for x in range(0,3): self.turnL()
+                case 'UP':
+                    for x in range(0,3): self.turnU()
+                case 'DP':
+                    for x in range(0,3): self.turnD()
+                case 'FP':
+                    for x in range(0,3): self.turnF()
+                case 'BP':
+                    for x in range(0,3): self.turnB()
+                case 'R2':
+                    for x in range(0,2): self.turnR()
+                case 'L2':
+                    for x in range(0,2): self.turnL()
+                case 'U2':
+                    for x in range(0,2): self.turnU()
+                case 'D2':
+                    for x in range(0,2): self.turnD()
+                case 'F2':
+                    for x in range(0,2): self.turnF()
+                case 'B2':
+                    for x in range(0,2): self.turnB()
 
                 
 
