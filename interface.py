@@ -19,10 +19,12 @@ class Button():
         self.rect.topleft = (x,y)
         self.clicked = False
 
+    #Returns bool when the button is pressed
     def initialise(self,window):
         mousepos = pygame.mouse.get_pos()
         beenclicked = False
 
+        #checks if the mouse is at the button, is pressed, and the button hadn't been clicked before
         if self.rect.collidepoint(mousepos):
             if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
                 self.clicked = True
@@ -35,6 +37,7 @@ class Button():
         window.blit(self.image, (self.rect.x, self.rect.y))
         return beenclicked      
 
+#Given the text, position, font, size, window to put on, and the text color. This function will put a text on the surface of a given window.
 def displaytext(text, coordinate, font, size,window,color):
     my_font = pygame.font.SysFont(font, size)
     displayedtext = my_font.render(text,True,color)
@@ -46,9 +49,12 @@ def displaytext(text, coordinate, font, size,window,color):
 def placecube(Rubikcube, pos,window,my_font):
     posx = pos[0]
     posy = pos[1]
+    #Each facelets are 50 pxl in width and height
     width = 50; height = 50
+    #iterates through cube.cu and places the cube according to its position within the list
     for c,items in enumerate(Rubikcube):
         for d,jtems in enumerate(items):
+            #c represents the face it is in, d represents its position in the face
             position = (c*9) + d + 1
             if position <= 9:
                 transformx,transformy = 0,0
@@ -62,7 +68,8 @@ def placecube(Rubikcube, pos,window,my_font):
                 transformx,transformy = 300,150
             elif position <= 54:
                 transformx,transformy = 0,300
-        
+            
+            #Draws color according to which color is assigned initially (i.e. U2 - up face - is white)
             match jtems[0]:
                 case 'u':
                     color = white
@@ -85,6 +92,8 @@ def placecube(Rubikcube, pos,window,my_font):
             text_surface = my_font.render(str(int(jtems[1])), False, (0, 0, 0))
             window.blit(text_surface, (x+10,y))
             pygame.display.update()
+        
+#Display the cube when it is solving. Need a time delay as the changes occurs too fast for us to see.
 def solvingcubedisplay(Rubikcube, delay):
     Rubikcube.updatedata()
     gridcoordinates = [[350,400,450,350,400,450,350,400,450],[50,50,50,100,100,100,150,150,150]]
@@ -92,7 +101,9 @@ def solvingcubedisplay(Rubikcube, delay):
     window = pygame.display.set_mode((1280,720))
     window.fill(white)
     displaytext('Solving...', (450,50),'Open Sans',60,window,(0,0,0))
+    #stops the program for 'delay' seconds
     time.sleep(delay)
+    #use placecube subroutine from prior to display the cube on screen
     placecube(Rubikcube.cu,gridcoordinates, window, my_font)
 
 #In this mode, players can freely interact with the cube 
@@ -104,8 +115,10 @@ def Rubikinteract():
     displaytext('Freeplay mode', (450,50),'Open Sans',60,window,(0,0,0))
     cube_font = pygame.font.SysFont('Open Sans', 30)
     pygame.display.flip()
+    #initialising 3 buttons for the user to quit, solve, or return.
     quitbtn = Button(300,450,(pygame.image.load('images/button_quit.png').convert_alpha()),1)
     solvebtn = Button(600,450,(pygame.image.load('images/button_solve.png').convert_alpha()),1)
+    #Initialise the cube as a solved cube
     Rubikcube = cube.cube([['u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'u7', 'u8', 'u9']
     ,['l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9']
     ,['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9']
@@ -118,12 +131,14 @@ def Rubikinteract():
         if returnbtn.initialise(window):
             run = False
             returnmenubool = True
+        #Limits the FPS
         clock.tick(40)
         placecube(Rubikcube.cu,[[350,400,450,350,400,450,350,400,450],[50,50,50,100,100,100,150,150,150]], window, cube_font)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 menu()
+            #Pressing keys will run a certain function
             if event.type == pygame.KEYDOWN:
                 if event.key == K_r:
                     Rubikcube.turnR()
@@ -150,14 +165,17 @@ def Rubikinteract():
                     Rubikcube.rotcube('y')
                 if event.key == K_z:
                     Rubikcube.rotcube('z')
-
+    #Returns to menu if return button is pressed
     if returnmenubool == True:
         menu()
+
+#This mode displays instruction to the users.
 def instructionscreen():
     clock = pygame.time.Clock()
     run = True
     window = pygame.display.set_mode((1280,720))
     window.fill(white)
+    #Code below add the text to the surface and put on a picture on the surface
     displaytext('Instructions', (450,50),'Open Sans',60,window,(255,0,0))
     displaytext('Press U/L/F/R/D/B to turn U/L/F/R/D/B faces', (450,100),'Open Sans',30,window,(0,0,0))
     displaytext('Press S to solve the cube', (450,150),'Open Sans',30,window,(0,0,0))
@@ -177,7 +195,7 @@ def instructionscreen():
                     run = False
 
         
-
+#In this mode, users can interact with a pocketcube.
 def Pocketinteract():
     clock = pygame.time.Clock()
     run = True
@@ -186,6 +204,7 @@ def Pocketinteract():
     displaytext('Freeplay mode', (450,50),'Open Sans',60,window,(0,0,0))
     cube_font = pygame.font.SysFont('Open Sans', 30)
     pygame.display.flip()
+    #Initialise the pocketcube
     pktcube = pocketcube.pocketcube([['u1', 'u2', 'u3', 'u4']
     ,['l1', 'l2', 'l3', 'l4']
     ,['f1', 'f2', 'f3', 'f4']
@@ -219,6 +238,12 @@ def Pocketinteract():
                     pktcube.transformation('l')
                 if event.key == K_f:
                     pktcube.transformation('f')
+                '''Solutions are obtained in two parts. The first part of the solution is sa solved UFR corner. This
+                is stored in variable solution and used to transform the cube in to the second group. The second part
+                is then obtained and appended to solution. The solution is then displayed on screen for the user. Also,
+                the pocketcube is passed on to a temporary class variable a deepcopy of the array is made to prevent
+                any changes made to the original.
+                '''
                 if event.key == K_s:
                     spktcube = pocketcubesolver.bfsPocketcube(copy.deepcopy(pktcube.returnstate()))
                     solution = spktcube.UFRsolve()
@@ -237,7 +262,7 @@ def Pocketinteract():
                 if event.key == K_z:
                     pass
         
-
+#In this mode, users can choose their options.
 def menu():
     pygame.font.init()
     window = pygame.display.set_mode((1280,720))
