@@ -1,5 +1,6 @@
 import cube
 
+#Inherites from class cube. Self.cu is changed such that each facelet is represented by a number.
 class permcube(cube.cube):
     def __init__(self,cu):
         super().__init__(cu)

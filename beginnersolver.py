@@ -70,11 +70,9 @@ class beginnersolver(cube.cube):
             self.rotcube('y')
         elif self.findlayer(keys) == 2:
           while keys not in self.cu[2]:
+            self.maketurns(['UP'])
             self.rotcube('y')
           self.crosssolvefrontface(keys)     
-          while self.cu[2][1][0] != self.cu[2][4][0]:
-              self.maketurns(['UP'])
-              self.rotcube('y')
         elif self.findlayer(keys) == 3:
           if keys in self.cu[5]:
             while self.getfaceletpos(keys) != 'd2':
@@ -294,6 +292,78 @@ class beginnersolver(cube.cube):
       self.rotcube('y')
     
     #last corner swap
+  def rotcube(self, axis):
+    with open('solution.txt','a') as s:
+        s.writelines(axis.lower() + '\n')
+    tempu,templ,tempf,tempr,tempb,tempd = self.cu[0], self.cu[1], self.cu[2], self.cu[3], self.cu[4], self.cu[5]
+    match axis:
+        case 'x':
+            self.cu[0], self.cu[1], self.cu[2], self.cu[3], self.cu[4], self.cu[5] = tempf,templ,tempd,tempr,tempu,tempb
+            for i in range(0,2): self.rotate(self.cu[4])
+            for i in range(0,2): self.rotate(self.cu[5])
+            for i in range(0,3): self.rotate(self.cu[1])
+            self.rotate(self.rface)
+        case 'y':
+            self.cu[0], self.cu[1], self.cu[2], self.cu[3], self.cu[4], self.cu[5] = tempu, tempf, tempr, tempb, templ, tempd
+            for i in range(0,3): self.rotate(self.cu[5])
+            self.rotate(self.cu[0])
+        case 'z':
+            self.cu[0], self.cu[1], self.cu[2], self.cu[3], self.cu[4], self.cu[5] = templ, tempd, tempf, tempu, tempb, tempr
+            self.rotate(self.cu[0])
+            self.rotate(self.cu[1])
+            self.rotate(self.cu[2])
+            self.rotate(self.cu[3])
+            self.rotate(self.cu[5])
+            for i in range(0,3):self.rotate(self.cu[4])
+    interface.solvingcubedisplay(self, 0.01)
+        
+                
+
+  def maketurns(self, theturn):
+    self.updatedata()
+    for turn in theturn:
+        turn = turn.upper()
+        with open('solution.txt','a') as s:
+            s.writelines(turn + '\n')
+        #interface.solvingcubedisplay(self, 0.1)
+        match turn:
+            case 'R':
+                self.turnR()
+            case 'L':
+                self.turnL()
+            case 'U':
+                self.turnU()
+            case 'D':
+                self.turnD()
+            case 'F':
+                self.turnF()
+            case 'B':
+                self.turnB()
+            case 'RP':
+                for x in range(0,3): self.turnR()
+            case 'LP':
+                for x in range(0,3): self.turnL()
+            case 'UP':
+                for x in range(0,3): self.turnU()
+            case 'DP':
+                for x in range(0,3): self.turnD()
+            case 'FP':
+                for x in range(0,3): self.turnF()
+            case 'BP':
+                for x in range(0,3): self.turnB()
+            case 'R2':
+                for x in range(0,2): self.turnR()
+            case 'L2':
+                for x in range(0,2): self.turnL()
+            case 'U2':
+                for x in range(0,2): self.turnU()
+            case 'D2':
+                for x in range(0,2): self.turnD()
+            case 'F2':
+                for x in range(0,2): self.turnF()
+            case 'B2':
+                for x in range(0,2): self.turnB()
+    interface.solvingcubedisplay(self,0.01)
 
   def solvecube(self):
     self.crosssolveFL()

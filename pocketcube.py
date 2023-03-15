@@ -1,3 +1,8 @@
+'''
+This file contains class pocketcube which contains information about the 2x2 cube and its functions. It uses copy library to
+deep copy an array within an array. This is to prevent separate arrays from affecting each other.
+'''
+
 #2x2 cube called pocket cube
 import pygame
 import random
@@ -8,13 +13,16 @@ class pocketcube:
         #data structure is [[a,b,c,d],[a,b,c,d],[a,b,c,d],[a,b,c,d],[a,b,c,d],[a,b,c,d]]; (u,l,f,r,b,d)
         self.cu = copy.deepcopy(cu)
     
+    #rotates a 2x2 array cw
     def rotpocket(self,arr):
         arr[1], arr[3], arr[0], arr[2] = arr[0], arr[1], arr[2], arr[3]
         return arr
     
+    #returns a facelet given its face and position
     def returnfacelet(self, face, position):
         return self.cu[face][position]
 
+    #Reset the cube back to solved state
     def resetcube(self):
         self.cu = [['u1', 'u2', 'u3', 'u4']
         ,['l1', 'l2', 'l3', 'l4']
@@ -23,6 +31,7 @@ class pocketcube:
         ,['b1', 'b2', 'b3', 'b4']
         ,['d1', 'd2', 'd3', 'd4']].copy()
     
+    #check if cube is solved
     def isSolved(self):
         if self.cu == [['u1', 'u2', 'u3', 'u4']
         ,['l1', 'l2', 'l3', 'l4']
@@ -34,10 +43,11 @@ class pocketcube:
         else:
             return False
             
-    
+    #return self.cu
     def returnstate(self):
         return self.cu
     
+    #Perform various faces turn on the cube
     def transformation(self, moves):
         for transform in moves:
             transform = transform.lower()
@@ -138,6 +148,8 @@ class pocketcube:
                     for i in range(0,3): self.transformation('b')
                 case 'd2':
                     for i in range(0,3): self.transformation('d')
+    
+    #Display the pocket cube given its position, font, and window surface
     def placepocket(self, pos,window,my_font):
         red = (255,0,0)
         green = (0,255,0)
@@ -188,6 +200,7 @@ class pocketcube:
                 window.blit(text_surface, (x+10,y))
                 pygame.display.update()
 
+    #Shuffles the cube
     def shufflecube(self):
         times = random.randint(50, 100)
         randommoves = []

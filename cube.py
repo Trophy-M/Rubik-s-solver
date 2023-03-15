@@ -1,6 +1,7 @@
 import random
 import time
 from varstore import *
+import interface
 
 class cube:
     def __init__(self, cu):
@@ -92,9 +93,10 @@ class cube:
     # do random moves on the cube randomly totalling from 50-100
     def shufflecube(self):
         times = random.randint(50, 100)
-        turns = [self.turnB, self.turnF, self.turnD, self.turnL, self.turnR, self.turnU]
-        for i in range(times):
-            random.choice(turns)
+        randommoves = []
+        for i in range(0, times):
+            randommoves.append(random.choice(['u','l','f','r','b','d','u2','l2','f2','r2','b2','d2','up','lp','fp','rp','bp','dp']))
+        self.maketurns(randommoves)
 
     # import other oreintation of cubes
     def rubikchange(self, importcube):
@@ -260,7 +262,7 @@ class cube:
         self.updatedata()
 
     def rotcube(self, axis):
-        with open('solution.txt','a') as s:
+        with open('rubiklog.txt','a') as s:
             s.writelines(axis.lower() + '\n')
         tempu,templ,tempf,tempr,tempb,tempd = self.cu[0], self.cu[1], self.cu[2], self.cu[3], self.cu[4], self.cu[5]
         match axis:
@@ -282,17 +284,16 @@ class cube:
                 self.rotate(self.cu[3])
                 self.rotate(self.cu[5])
                 for i in range(0,3):self.rotate(self.cu[4])
-        #interface.solvingcubedisplay(self, 0.1)
         
                 
 
     def maketurns(self, theturn):
         self.updatedata()
         for turn in theturn:
-            with open('solution.txt','a') as s:
+            turn = turn.upper()
+            with open('rubiklog.txt','a') as s:
                 s.writelines(turn + '\n')
             #interface.solvingcubedisplay(self, 0.1)
-            print(turn + '\n')
             match turn:
                 case 'R':
                     self.turnR()

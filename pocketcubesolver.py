@@ -3,10 +3,12 @@ import pocketcube
 import copy
 import time
 
+#Class inherits from pocketcube but added additional methods which solves the cube
 class bfsPocketcube(pocketcube.pocketcube):
     def __init__(self, cu):
         super().__init__(cu)
     
+    #inverses moves given in an array (i.e. [FP,L,R2] --> [R2,LP,F])
     def inversemove(self,moves):
         moves.reverse()
         inversedmove = []
@@ -27,7 +29,6 @@ class bfsPocketcube(pocketcube.pocketcube):
         initialUFR = copy.deepcopy([self.cu[0][3],self.cu[2][1],self.cu[3][0]])
         goalUFR = {'a',str(['u4','f2','r1'])}
         moves = [['u'],['l'],['f'],['r'],['b'],['d'],['u2'],['l2'],['f2'],['r2'],['b2'],['d2'],['up'],['lp'],['fp'],['rp'],['bp'],['dp']]
-        #moves = [['l'],['b'],['d'],['l2'],['b2'],['d2'],['lp'],['bp'],['dp']]
         queue = []
         depthlimit = 8
         n=0
@@ -80,10 +81,13 @@ class bfsPocketcube(pocketcube.pocketcube):
 
     #search from current state to goal node using bfs and other way round
     def bibfssearch(self):
+        #limits the search depth
         depthlimit = 8
         queue = []
+        #Both dictionary will contain {state:moves made to reach the state}
         visittedstart = {}
         visittedgoal = {}
+        #Defines the start and the goal state
         startnode = list(self.returnstate())
         goalnode = list([['u1', 'u2', 'u3', 'u4']
         ,['l1', 'l2', 'l3', 'l4']
@@ -91,12 +95,12 @@ class bfsPocketcube(pocketcube.pocketcube):
         ,['r1', 'r2', 'r3', 'r4']
         ,['b1', 'b2', 'b3', 'b4']
         ,['d1', 'd2', 'd3', 'd4']])
-        #moves = [['u'],['l'],['f'],['r'],['b'],['d'],['up'],['lp'],['fp'],['rp'],['bp'],['dp']]
+        #moves reduced to these
         moves = [['l'],['b'],['d'],['l2'],['b2'],['d2'],['lp'],['bp'],['dp']]
-        #moves = [['u'],['l'],['f'],['r'],['b'],['d'],['u2'],['l2'],['f2'],['r2'],['b2'],['d2'],['up'],['lp'],['fp'],['rp'],['bp'],['dp']]
         queue = copy.deepcopy(moves)
         search = True
         searchtreestart, searchtreegoal = {}, {}
+        #Sets that contains states for each of the search direction
         searchstatestart, searchstategoal = {'a'}, {'b'}
         prevdepth = 1
         #n counts number of iterations
@@ -105,15 +109,16 @@ class bfsPocketcube(pocketcube.pocketcube):
         if startnode == goalnode:
             search = False
         while search:
+            #path is the transformation to be performed/next in queue
             path = queue.pop(0)
             if len(path) > depthlimit:
                 search = False
                 print('Depth limit reached')
             for items in moves:
-                #if turns are repeated (e.g. r r2) they are redundant
+                #if turns are repeated (e.g. r r2) they are redundant hence we dont append them in the queue
                 if path[len(path)-1][0] != items[0][0] and len(path+items) <= depthlimit:
                     queue.append(path+items)
-            #for start node
+            #for start node; we use tempcube to temporary be applied the transformation. Same state as start.
             tempcube = pocketcube.pocketcube(copy.deepcopy(startnode))
             tempcube.transformation(path)
 
@@ -121,11 +126,12 @@ class bfsPocketcube(pocketcube.pocketcube):
             if tempcube in visittedstart:
                 continue
             else:
+                #Add to dict visited to see if the nodes are visited and dict for search tree containing the path. Also added to a set
                 visittedstart[str(currentnode)] = n
                 searchtreestart[str(currentnode)] = path
                 searchstatestart.add(str(currentnode))
             
-            #for end node
+            #for end node; same state as solved.
             tempcube = pocketcube.pocketcube(copy.deepcopy(goalnode))
             tempcube.transformation(path)
 
@@ -137,14 +143,15 @@ class bfsPocketcube(pocketcube.pocketcube):
                 searchtreegoal[str(currentnode)] = path
                 searchstategoal.add(str(currentnode))
 
-            #if the node from goal is in visittedstart then a solution is found
+            #Performs set intersection to find out if a solution has been found.
             if bool(searchstatestart&searchstategoal) == True:
                 print('Solution is found in', n)
                 end = time.time()
                 print('Time taken: ', end-start)
                 middlenode = list(searchstatestart&searchstategoal)[0]
                 print(searchtreegoal[middlenode])
-                solution = searchtreestart[middlenode] + self.inversemove(searchtreegoal[middlenode]) #need to reverse solution from goal
+                #Have to inverse moves made from goal. Then add those two together we have the solution.
+                solution = searchtreestart[middlenode] + self.inversemove(searchtreegoal[middlenode])
                 search = False
             
             
@@ -155,7 +162,7 @@ class bfsPocketcube(pocketcube.pocketcube):
             print('Current path bi: ', path)
             prevdepth = len(path)
             #print(searchstatestart,searchstategoal)
-   
+        #Don't return the solution if these are no iterations of the search.
         if n == 0:
             pass
         else:
