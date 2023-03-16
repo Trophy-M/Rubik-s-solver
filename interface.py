@@ -102,7 +102,7 @@ def solvingcubedisplay(Rubikcube, delay):
     window.fill(white)
     displaytext('Solving...', (450,50),'Open Sans',60,window,(0,0,0))
     #stops the program for 'delay' seconds
-    time.sleep(delay)
+    #time.sleep(delay)
     #use placecube subroutine from prior to display the cube on screen
     placecube(Rubikcube.cu,gridcoordinates, window, my_font)
 
@@ -159,12 +159,6 @@ def Rubikinteract():
                     Rubikcube.shufflecube()
                 if event.key == K_1:
                     Rubikcube.cubereset()
-                if event.key == K_x:
-                    Rubikcube.rotcube('x')
-                if event.key == K_y:
-                    Rubikcube.rotcube('y')
-                if event.key == K_z:
-                    Rubikcube.rotcube('z')
     #Returns to menu if return button is pressed
     if returnmenubool == True:
         menu()
@@ -250,6 +244,7 @@ def Pocketinteract():
                     spktcube.transformation(solution)
                     invsol = spktcube.inversemove(solution.copy())
                     solution += spktcube.bibfssearch()
+                    pygame.draw.rect(window, (255,255,255), pygame.Rect(100, 100, 500, 20))
                     displaytext(('Solution is '+ str(solution)), (100,100),'Open Sans',20,window,(0,0,0))
                 if event.key == K_0:
                     pktcube.shufflecube()

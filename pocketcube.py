@@ -205,6 +205,7 @@ class pocketcube:
         times = random.randint(50, 100)
         randommoves = []
         for i in range(0, times):
+            #Generates a random list containing random moves
             randommoves.append(random.choice(['u','l','f','r','b','d','u2','l2','f2','r2','b2','d2','up','lp','fp','rp','bp','dp']))
         print('Moves applied', randommoves)
         self.transformation(randommoves)

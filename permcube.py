@@ -12,12 +12,11 @@ class permcube(cube.cube):
         newcu = []
         for faces in self.cu:
             for facelet in faces:
-                newcu.append(facesname.index(facelet[0])*9+int(facelet[1])-1)
+                #position of the subarray in the array times 9 plus position of element in subarray
+                newcu.append(facesname.index(facelet[0])*9+int(facelet[1])-1) 
         return newcu
     
-    def lehmerencoding(self):
-        pass
-
+    #Return cube state as a string
     def returnbitstring(self):
         return ','.join(str(x) for x in self.cu)
 

@@ -4,15 +4,15 @@ import csv
 
 #hashes the pattern of the rubik cube for storage. Cant be shared between rubik and pocket
 def hashstate(cu):
+    #Each coord is represented by primes which are not the same as prime for colors
     primelist = [7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,107,109,113,127,131,137,139,149,
-                151,157,163,167,173,179,181,191,193,197,199,211,223,227,229,233]
-    colors = {'u':0,'l':1,'f':2,'r':3,'b':4,'d':5,}
+                151,157,163,167,173,179,181,191,193,197,199,211,223,227,229,233] 
+    colors = {'u':0,'l':1,'f':2,'r':3,'b':4,'d':5,} #Each faces colors represented by prime arrays
     hashvalues = []
     finalhash = 1
-    #R is rubik
     for c,faces in enumerate(cu):
         for d,facelets in enumerate(faces):
-            hashvalues.append(primelist[c+d-1]**colors[facelets[0]])
+            hashvalues.append(primelist[c*9+d-1]**colors[facelets[0]])
     for i in hashvalues:
         finalhash = finalhash*i
     
@@ -52,7 +52,8 @@ def generatecorners(startcube):
                 else:
                     queue.append((copy.deepcopy(temppkt.returnstate()),currentnode[1]+1))
             cornerpdb.writerow({'state': hashstate(currentstate),'depth': currentnode[1]})
-            print('At iteration: ',n, 'Current queue length: ', len(queue))
+            if n%10000 == 0:
+                print(n)
     cornerpdb.close()
         
 
