@@ -3,6 +3,12 @@ import time
 from varstore import *
 import interface
 
+'''
+Class takes in an array in an array which represents a state of the Rubik's cube as a parameter. Each of the list is split in to self.uface, self.lface, etc;
+in order to represent all of the faces. Edges and corners are also defined in a dict based on their name and their corresponding facelet within that edge or
+corner currently.
+'''
+
 class cube:
     def __init__(self, cu):
         self.cu = cu
@@ -20,7 +26,7 @@ class cube:
             'ur':[self.uface[5],self.rface[1]],
             'fl':[self.fface[3],self.lface[5]],
             'fr':[self.fface[5],self.rface[3]],
-            'bl':[self.bface[5],self.lface[3]], #check bface connections
+            'bl':[self.bface[5],self.lface[3]],
             'br':[self.bface[3],self.rface[5]],
             'db':[self.dface[1],self.bface[7]],
             'dl':[self.dface[5],self.lface[7]],
@@ -62,7 +68,7 @@ class cube:
         'ur':[self.uface[5],self.rface[1]],
         'fl':[self.fface[3],self.lface[5]],
         'fr':[self.fface[5],self.rface[3]],
-        'bl':[self.bface[5],self.lface[3]], #check bface connections
+        'bl':[self.bface[5],self.lface[3]],
         'br':[self.bface[3],self.rface[5]],
         'db':[self.dface[7],self.bface[7]],
         'dl':[self.dface[3],self.lface[7]],
@@ -138,7 +144,6 @@ class cube:
         return solvedcorner
 
     #search for edge (solved) and find where it is (scrambled)
-    #current problem: the faces in the edge isn't fixed
     def searchedge(self, thisedge):
         self.updatedata
         thisedgeat = 'k'
@@ -169,11 +174,17 @@ class cube:
                 layer = 2
         return layer
     
+    '''
+    Below are subroutines which perform transformations to the cube once it is turn. When the cube is turned, the face that is being turned is rotated
+    and the facelets that are connected to the face is also translated to a different face. Hence we need to consider both the face rotation and the 
+    translation of these faces.
+    '''
     def rotate(self,arr):
         arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6], arr[7], arr[8] = arr[6], arr[3], arr[0], arr[7], arr[4], \
                                                                                 arr[1], arr[8], arr[5], arr[2]
         return arr
 
+    
     def turnR(self):
         self.rotate(self.cu[3])
         tempf = self.cu[2][2], self.cu[2][5], self.cu[2][8]
@@ -261,6 +272,7 @@ class cube:
         self.cu[3][8], self.cu[3][5], self.cu[3][2] = tempr
         self.updatedata()
 
+    #Input in axis rotations as a string. The transformation will then be done.
     def rotcube(self, axis):
         with open('rubiklog.txt','a') as s:
             s.writelines(axis.lower() + '\n')
@@ -286,9 +298,10 @@ class cube:
                 for i in range(0,3):self.rotate(self.cu[4])
         
                 
-
+    #Take in an array which contains moves. These moves will then be done sequentially on the cube.
     def maketurns(self, theturn):
         self.updatedata()
+        #Iterates through all the moves in the array
         for turn in theturn:
             turn = turn.upper()
             with open('rubiklog.txt','a') as s:
