@@ -181,6 +181,7 @@ class beginnersolver(cube.cube):
     elif self.cu[0][7][0] == self.cu[1][4][0]:
       self.maketurns(['UP','LP','U','L','U','F','UP','FP'])
 
+  #checks if second layer is solved by comparing if all of the facelets (4-9) from all faces matches
   def isSecondLayerSolved(self):
     solved = False
     facessolved = 0
@@ -192,6 +193,7 @@ class beginnersolver(cube.cube):
     
     return solved
 
+  #solves the second layer
   def secondlayersolve(self):
     for i in range(0,2): self.rotcube( 'x')
     faceletmap = {}
@@ -234,6 +236,7 @@ class beginnersolver(cube.cube):
             self.rotcube('y')
           self.secondlayeredgeinsert()
 
+  #solves the last layer
   def lastlayercornerssolve(self):
     solvedcornersbool = [False,False,False,False]
     while solvedcornersbool != [True, True, True, True]:
@@ -274,7 +277,7 @@ class beginnersolver(cube.cube):
     while self.cu[2][4][0] != 'f':
       self.rotcube('y')
     
-    #last corner swap
+  #Modified rotcube method in order for the cube to automatically display when solving
   def rotcube(self, axis):
     with open('solution.txt','a') as s:
         s.writelines(axis.lower() + '\n')
@@ -302,6 +305,7 @@ class beginnersolver(cube.cube):
         
                 
 
+  #Likewise
   def maketurns(self, theturn):
     self.updatedata()
     for turn in theturn:
@@ -348,7 +352,9 @@ class beginnersolver(cube.cube):
                 for x in range(0,2): self.turnB()
     interface.solvingcubedisplay(self,0.01)
 
+  #Combines all of the methods earlier to solve the cube
   def solvecube(self):
+    #Checks if cube is already solved
     if self.cu == self.solved:
       pass
     else:
