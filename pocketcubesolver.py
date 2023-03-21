@@ -32,7 +32,7 @@ class bfsPocketcube(pocketcube.pocketcube):
         queue = []
         depthlimit = 8
         n=0
-        visited, searchtree,searchstate = {},{},{'b'}
+        searchtree,searchstate = {},{},{'b'}
         startnode = self.cu
         search = True
         queue = copy.deepcopy(moves)
@@ -49,10 +49,9 @@ class bfsPocketcube(pocketcube.pocketcube):
             tempcube.transformation(path)
 
             currentnode = tempcube.returnstate()
-            if tempcube in visited:
+            if tempcube in searchtree:
                 continue
             else:
-                visited[str(currentnode)] = n
                 searchtree[str(currentnode)] = path
                 searchstate.add(str([currentnode[0][3],currentnode[2][1],currentnode[3][0]]))
             
