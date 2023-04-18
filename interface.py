@@ -159,6 +159,10 @@ def Rubikinteract():
                     Rubikcube.shufflecube()
                 if event.key == K_1:
                     Rubikcube.cubereset()
+                if event.key == K_z:
+                    Rubikcube.logstate()
+                if event.key == K_x:
+                    Rubikcube.loadstate()
     #Returns to menu if return button is pressed
     if returnmenubool == True:
         menu()
@@ -175,9 +179,10 @@ def instructionscreen():
     displaytext('Press S to solve the cube', (450,150),'Open Sans',30,window,(0,0,0))
     displaytext('Press 0 to scramble the cube', (450,200),'Open Sans',30,window,(0,0,0))
     displaytext('Press 1 to reset the cube', (450,250),'Open Sans',30,window,(0,0,0))
-    displaytext('Press enter to continue', (450,300),'Open Sans',30,window,(0,0,100))
-    rubiklogo = pygame.transform.scale((pygame.image.load('images/rubik_logo.png').convert_alpha()), (int(1200*0.25),int(1200*0.25)))
-    window.blit(rubiklogo, (450, 350))
+    displaytext('Press z/x to save/load the cube', (450,300),'Open Sans',30,window,(0,0,0))
+    displaytext('Press enter to continue', (450,350),'Open Sans',30,window,(0,0,100))
+    rubiklogo = pygame.transform.scale((pygame.image.load('images/rubik_logo.png').convert_alpha()), (int(1200*0.20),int(1200*0.20)))
+    window.blit(rubiklogo, (450, 400))
     pygame.display.flip() 
     while run:
         clock.tick(40)
@@ -250,12 +255,10 @@ def Pocketinteract():
                     pktcube.shufflecube()
                 if event.key == K_1:
                     pktcube.resetcube()
-                if event.key == K_x:
-                    pass
-                if event.key == K_y:
-                    pass
                 if event.key == K_z:
-                    pass
+                    pktcube.logstate()
+                if event.key == K_x:
+                    pktcube.loadstate()
         
 #In this mode, users can choose their options.
 def menu():

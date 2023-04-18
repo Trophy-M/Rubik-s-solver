@@ -7,11 +7,12 @@ deep copy an array within an array. This is to prevent separate arrays from affe
 import pygame
 import random
 import copy
+import ast
 
 class pocketcube:
     def __init__(self, cu):
         #data structure is [[a,b,c,d],[a,b,c,d],[a,b,c,d],[a,b,c,d],[a,b,c,d],[a,b,c,d]]; (u,l,f,r,b,d)
-        self.cu = copy.deepcopy(cu)
+        self.cu = cu
     
     #rotates a 2x2 array cw
     def rotpocket(self,arr):
@@ -42,7 +43,20 @@ class pocketcube:
             return True
         else:
             return False
-            
+    
+    def logstate(self):
+        self.cubelog = open('pocketlog.txt','w')
+        for rows in self.cu:
+            self.cubelog.writelines(str(rows) + '\n')
+        self.cubelog.close()
+    
+    def loadstate(self):
+        self.cubelog = open('pocketlog.txt','r')
+        cubestate = []
+        for lines in self.cubelog: 
+            cubestate.append(ast.literal_eval(lines[0:-1]))
+        self.cu = copy.deepcopy(cubestate)
+
     #return self.cu
     def returnstate(self):
         return self.cu
@@ -207,7 +221,6 @@ class pocketcube:
         for i in range(0, times):
             #Generates a random list containing random moves
             randommoves.append(random.choice(['u','l','f','r','b','d','u2','l2','f2','r2','b2','d2','up','lp','fp','rp','bp','dp']))
-        print('Moves applied', randommoves)
         self.transformation(randommoves)
 
 

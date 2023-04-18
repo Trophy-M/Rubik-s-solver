@@ -2,6 +2,8 @@ import random
 import time
 from varstore import *
 import interface
+import copy
+import ast
 
 class cube:
     def __init__(self, cu):
@@ -43,9 +45,20 @@ class cube:
                    ['r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9'], \
                    ['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b9'],
                    ['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9']]
-        self.cubelog = open('rubiklog.txt','w')
-        self.cubelog.close()
         
+        
+    def logstate(self):
+        self.cubelog = open('rubiklog.txt','w')
+        for rows in self.cu:
+            self.cubelog.writelines(str(rows) + '\n')
+        self.cubelog.close()
+    
+    def loadstate(self):
+        self.cubelog = open('rubiklog.txt','r')
+        cubestate = []
+        for lines in self.cubelog: 
+            cubestate.append(ast.literal_eval(lines[0:-1]))
+        self.cu = copy.deepcopy(cubestate)
 
     def checkchanges(self):
         if self.prev != self.cu:
@@ -262,8 +275,6 @@ class cube:
         self.updatedata()
 
     def rotcube(self, axis):
-        with open('rubiklog.txt','a') as s:
-            s.writelines(axis.lower() + '\n')
         tempu,templ,tempf,tempr,tempb,tempd = self.cu[0], self.cu[1], self.cu[2], self.cu[3], self.cu[4], self.cu[5]
         match axis:
             case 'x':
@@ -291,8 +302,6 @@ class cube:
         self.updatedata()
         for turn in theturn:
             turn = turn.upper()
-            with open('rubiklog.txt','a') as s:
-                s.writelines(turn + '\n')
             #interface.solvingcubedisplay(self, 0.1)
             match turn:
                 case 'R':

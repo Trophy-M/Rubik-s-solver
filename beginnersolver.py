@@ -6,6 +6,9 @@ import interface
 class beginnersolver(cube.cube):
   def __init__(self,cu):
     super().__init__(cu)
+    self.solution = []
+    self.solutionlog = open('solution.txt', 'w')
+    self.solutionlog.close()
 
   #check if top layer forms a cross
   def checkifcross(Rubikcube):
@@ -276,9 +279,8 @@ class beginnersolver(cube.cube):
     
     #last corner swap
   def rotcube(self, axis):
-    with open('solution.txt','a') as s:
-        s.writelines(axis.lower() + '\n')
     tempu,templ,tempf,tempr,tempb,tempd = self.cu[0], self.cu[1], self.cu[2], self.cu[3], self.cu[4], self.cu[5]
+    self.solution.append(axis)
     match axis:
         case 'x':
             self.cu[0], self.cu[1], self.cu[2], self.cu[3], self.cu[4], self.cu[5] = tempf,templ,tempd,tempr,tempu,tempb
@@ -306,8 +308,7 @@ class beginnersolver(cube.cube):
     self.updatedata()
     for turn in theturn:
         turn = turn.upper()
-        with open('solution.txt','a') as s:
-            s.writelines(turn + '\n')
+        self.solution.append(turn)
         #interface.solvingcubedisplay(self, 0.1)
         match turn:
             case 'R':
@@ -352,6 +353,7 @@ class beginnersolver(cube.cube):
     if self.cu == self.solved:
       pass
     else:
+      self.solution = []
       self.crosssolveFL()
       print('Cross solved')
       self.cornersarrange()
@@ -360,5 +362,9 @@ class beginnersolver(cube.cube):
       print('Second Layer solved')
       self.lastlayercross()
       print('Cube solved')
+      self.solutionlog = open('solution.txt', 'w')
+      self.solutionlog.writelines(str(self.solution))
+      self.solutionlog.close()
       interface.Rubikinteract()
+      
 
